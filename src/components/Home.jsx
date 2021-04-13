@@ -7,7 +7,7 @@ import {
   NavLink,
 } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Profile from './Profile';
+import UserProfile from './UserProfile';
 import Search from './Search';
 import AdminDashboard from './Admin_dashboard';
 import SignOut from './SignOut';
@@ -167,7 +167,7 @@ const Home = (props) => {
           </Route>
 
           <Route path="/profile">
-            <Profile />
+            <UserProfile />
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>
 
