@@ -1,7 +1,20 @@
 import React from 'react';
 
 const petsDB2 = {
-  users: [{}],
+  users: [
+    {
+      id: 1,
+      createdDate: 0,
+      name: 'Mister X',
+      admin: true,
+    },
+    {
+      id: 2,
+      createdDate: 0,
+      name: 'Pietje',
+      admin: false,
+    },
+  ],
   admins: [{}],
   pets: [
     {

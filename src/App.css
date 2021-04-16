@@ -7,6 +7,18 @@
   pointer-events: none;
 }
 
+body {
+  /* Background photo: 
+<a href='https://www.freepik.com/vectors/kids'>Kids vector created by brgfx - www.freepik.com</a>
+  */
+  background: url(./petsbackground.png) no-repeat;
+  background-size: cover;
+  /* display: grid;
+  align-items: center;
+  justify-content: center; */
+  /* height: 90vh; */
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

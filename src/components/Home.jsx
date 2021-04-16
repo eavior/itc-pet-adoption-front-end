@@ -9,7 +9,8 @@ import {
 import { useState, useEffect } from 'react';
 import UserProfile from './UserProfile';
 import Search from './Search';
-import AdminDashboard from './Admin_dashboard';
+import AdminDashboard from './AdminDashboard';
+import AddPet from './AdminAddPet';
 import SignOut from './SignOut';
 import MyPetsList from './MyPetsList';
 import { petsDB, petsDB2 } from '../db/database';
@@ -28,7 +29,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 exact
                 to="/">
                 Home
@@ -37,7 +38,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 to="/my_pets">
                 My pets
               </NavLink>
@@ -45,7 +46,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 to="/search">
                 Search a pet
               </NavLink>
@@ -53,7 +54,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 to="/profile">
                 My profile
               </NavLink>
@@ -61,7 +62,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 to="/admin">
                 Admin
               </NavLink>
@@ -69,7 +70,7 @@ const NavBar = () => {
             <li className="nav-item">
               <NavLink
                 className="nav-link"
-                activeClassName="selected"
+                activeClassName="active"
                 to="/sign_out">
                 Sign out
               </NavLink>
@@ -95,6 +96,7 @@ const NavBar = () => {
 const Home = (props) => {
   //   const {authUser} = props;
   const [pets, setPets] = useState(petsDB2);
+  const [users, setUsers] = useState(petsDB2);
   const [greeting, setGreeting] = useState('Good morning');
 
   // useEffect(() => {
@@ -114,8 +116,7 @@ const Home = (props) => {
     });
   };
 
-  const array = pets.pets;
-  const animal = pets.pets.filter((x) => x.id == 2);
+  const animal = users.users.filter((x) => x.id == 2);
 
   console.log(animal);
 
@@ -172,7 +173,12 @@ const Home = (props) => {
           </Route>
 
           <Route path="/admin">
-            <AdminDashboard />
+            <AdminDashboard users={users.users} />
+            {/* <Profile currentUser={authUser.uid}></Profile> */}
+          </Route>
+
+          <Route path="/add_pet">
+            <AddPet />
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>
 
