@@ -8,7 +8,7 @@ const PetProfile = (props) => {
   let { id } = useParams();
   // const isMounted = useRef(false);
 
-  let pet = pets.filter((x) => x.id === id)[0];
+  let pet = pets.filter((x) => x.id === +id)[0];
 
   /*
   useEffect(() => {
@@ -21,7 +21,6 @@ const PetProfile = (props) => {
   */
 
   const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
-  console.log(petsOfCurrentUser);
 
   // const isCurrentUserOwner = () => {
   //   find current petID in array petsOfCurrentUser; do through SQL
