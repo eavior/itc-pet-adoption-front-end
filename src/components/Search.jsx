@@ -1,35 +1,39 @@
-import React from "react";
-import { useEffect, useState, useRef } from "react";
+import React from 'react';
+// import { useEffect, useState, useRef } from 'react';
 
 const Search = (props) => {
-  const { item } = props;
-  const [displayName, setdisplayName] = useState(null);
-  const isMounted = useRef(false);
+  // const { item } = props;
 
-  useEffect(() => {
-    isMounted.current = true;
-    
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  // const isMounted = useRef(false);
+
+  // useEffect(() => {
+  //   isMounted.current = true;
+
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, []);
 
   return (
-    <div>This is the search page.<br/>
-Components:<br/>
-Search bar<br/>
-Results of search (List of animal card components that link to the pet page)<br/>
-<br/>
-Search Bar Component: <br/>
-Can toggle between basic and advanced search <br/>
-<br/>
-Basic Search:<br/>
-Can search based on Type of animal <br/>
-<br/>
-Advanced search:<br/>
-Can search based on Adoption Status, Height, Weight, Type, Name<br/>
-
-    </div>
+    <>
+      <div>Basic search: type of animal</div>
+      <form className="d-flex">
+        <input
+          className="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button className="btn btn-outline-success" type="submit">
+          Search
+        </button>
+      </form>
+      <div>
+        Results of search: list of animal card components that link to the pet
+        page
+      </div>
+      <div>Advanced search: Adoption Status, Height, Weight, Type, Name</div>
+    </>
   );
 };
 

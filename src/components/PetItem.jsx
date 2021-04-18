@@ -1,22 +1,19 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+// import { useState, useRef } from 'react';
 
 const PetItem = (props) => {
-  console.log(props);
   const { item } = props;
   // const { item } = props;
-  const [displayName, setdisplayName] = useState(null);
-  const isMounted = useRef(false);
 
-  useEffect(() => {
-    isMounted.current = true;
+  // const isMounted = useRef(false);
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  // useEffect(() => {
+  //   isMounted.current = true;
 
-  let imageURL = '../public/bird.jpeg';
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, []);
 
   return (
     <>

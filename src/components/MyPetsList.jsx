@@ -3,38 +3,46 @@ import { useEffect, useState, useRef } from 'react';
 import PetItem from './PetItem';
 
 const MyPetsList = (props) => {
-  console.log(props.pets.length);
-  console.log(props.pets);
-  const { pets } = props;
+  const { pets, currentUser } = props;
   const [noPets, setNoPets] = useState(null);
-  const [toggle, setToggle] = useState(null);
+  // const [toggle, setToggle] = useState(null);
   const isMounted = useRef(false);
-  const [amountToShow, setAmountToShow] = useState(10);
+  // const [amountToShow, setAmountToShow] = useState(10);
   // const [pets, setPets] = useState([]);
-  const [lastKey, setLastKey] = useState('');
-  const [nextTweets_loading, setNextTweetsLoading] = useState(false);
+  // const [lastKey, setLastKey] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
-    props.pets.length <= 1 ? setNoPets(true) : setNoPets(false);
+    pets.length <= 1 ? setNoPets(true) : setNoPets(false);
     return () => {
       isMounted.current = false;
     };
-  }, []);
+  }, [pets.length]);
 
   const noPetsMessage = (
     <div>You don't have any adopted or fostered pets yet. </div>
   );
 
-  const allPets = (
+  const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
+  const allOwnedPets = (
     <div className="row row-cols-1 row-cols-md-auto g-4">
-      {pets.map((item) => {
-        return <PetItem key={item.id} item={item} />;
+      {petsOfCurrentUser.map((item) => {
+        return <PetItem key={item.id} item={item} currentUser={currentUser} />;
       })}
     </div>
   );
 
-  console.log(allPets);
+  const savedPetIDs = currentUser.savedPets;
+  const petsSavedByCurrentUser = pets.filter(function (item) {
+    return savedPetIDs.includes(item.id);
+  });
+  const allSavedPets = (
+    <div className="row row-cols-1 row-cols-md-auto g-4">
+      {petsSavedByCurrentUser.map((item) => {
+        return <PetItem key={item.id} item={item} currentUser={currentUser} />;
+      })}
+    </div>
+  );
 
   return (
     <>
@@ -62,7 +70,7 @@ const MyPetsList = (props) => {
             data-parent="#accordion">
             <div className="card-body">
               <div>{noPets && noPetsMessage}</div>
-              <div>{!noPets && allPets}</div>
+              <div>{!noPets && allOwnedPets}</div>
             </div>
           </div>
         </div>
@@ -86,7 +94,7 @@ const MyPetsList = (props) => {
             data-parent="#accordion">
             <div className="card-body">
               <div>{noPets && noPetsMessage}</div>
-              <div>{!noPets && allPets}</div>
+              <div>{!noPets && allSavedPets}</div>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function SignUp() {
@@ -121,7 +121,8 @@ export default function SignUp() {
               className="form-check-input"
               type="checkbox"
               id="gridCheck"></input>
-            <label className="form-check-label" for="gridCheck">
+            <label className="form-check-label">
+              {/* for="gridCheck" */}
               Agree to the user terms
             </label>
           </div>

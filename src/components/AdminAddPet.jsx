@@ -1,27 +1,39 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+// import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 const AddPet = (props) => {
-  const { item } = props;
-  const [displayName, setdisplayName] = useState(null);
-  const isMounted = useRef(false);
+  // const { item } = props;
+  // const [displayName, setdisplayName] = useState(null);
+  // const [pets, setPets] = useState(null);
+  // const isMounted = useRef(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => console.log(data);
 
-  useEffect(() => {
-    isMounted.current = true;
+  // useEffect(() => {
+  //   isMounted.current = true;
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, []);
+
+  // const handleOnNewPet = (newPet) => {
+  //   setPets((prevPets) => [...prevPets, newPet]);
+  // };
+  // const handleOnDeleteItem = (itemIndex) => {
+  //   setPets((prevPets) => {
+  //     const left = prevPets.slice(0, itemIndex);
+  //     const right = prevPets.slice(itemIndex + 1);
+  //     return [...left, ...right];
+  //   });
+  // };
 
   return (
     <>
@@ -147,7 +159,8 @@ const AddPet = (props) => {
               className="form-check-input"
               type="checkbox"
               id="gridCheck"></input>
-            <label className="form-check-label" for="gridCheck">
+            <label className="form-check-label">
+              {/* for="gridCheck" */}
               Agree to the user terms
             </label>
           </div>

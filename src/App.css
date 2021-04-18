@@ -13,6 +13,7 @@ body {
   */
   background: url(./petsbackground.png) no-repeat;
   background-size: cover;
+  background-position: left top;
   /* display: grid;
   align-items: center;
   justify-content: center; */

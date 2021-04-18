@@ -1,20 +1,18 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+// import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function UserProfile() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm();
-  const [currentEntries, setCurrentEntries] = useState({
-    fname: 'Elisha',
-    lname: 'Avior',
-  });
+  // const [currentEntries, setCurrentEntries] = useState({
+  //   fname: 'Elisha',
+  //   lname: 'Avior',
+  // });
   const onSubmit = (data) => console.log(data);
-  console.log(errors);
-  console.log(currentEntries.fname);
 
   return (
     <>
@@ -132,7 +130,10 @@ export default function UserProfile() {
               className="form-check-input"
               type="checkbox"
               id="gridCheck"></input>
-            <label className="form-check-label" for="gridCheck">
+            <label
+              className="form-check-label"
+              // for="gridCheck"
+            >
               Agree to the user terms
             </label>
           </div>

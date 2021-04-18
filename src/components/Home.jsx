@@ -6,15 +6,16 @@ import {
   Route,
   NavLink,
 } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import UserProfile from './UserProfile';
-import Search from './Search';
+
 import AdminDashboard from './AdminDashboard';
 import AddPet from './AdminAddPet';
 import SignOut from './SignOut';
 import MyPetsList from './MyPetsList';
-import { petsDB, petsDB2 } from '../db/database';
+import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
+import Search from './Search';
 
 const NavBar = () => {
   return (
@@ -95,30 +96,32 @@ const NavBar = () => {
 
 const Home = (props) => {
   //   const {authUser} = props;
-  const [pets, setPets] = useState(petsDB2);
-  const [users, setUsers] = useState(petsDB2);
-  const [greeting, setGreeting] = useState('Good morning');
+  const [pets] = useState(mockDB.pets);
+  const [users] = useState(mockDB.users);
+  const [greeting] = useState('Good morning');
+  const { userID } = props;
+  const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
 
+  // const adopted = currentUser[0].
   // useEffect(() => {
   //   getPets()
   //     .then(pets => {
   //       setPets(pets);
   //     });
   // }, []);
-  const handleOnNewPet = (newPet) => {
-    setPets((prevPets) => [...prevPets, newPet]);
-  };
-  const handleOnDeleteItem = (itemIndex) => {
-    setPets((prevPets) => {
-      const left = prevPets.slice(0, itemIndex);
-      const right = prevPets.slice(itemIndex + 1);
-      return [...left, ...right];
-    });
-  };
 
-  const animal = users.users.filter((x) => x.id == 2);
+  // const handleOnNewPet = (newPet) => {
+  //   setPets((prevPets) => [...prevPets, newPet]);
+  // };
+  // const handleOnDeleteItem = (itemIndex) => {
+  //   setPets((prevPets) => {
+  //     const left = prevPets.slice(0, itemIndex);
+  //     const right = prevPets.slice(itemIndex + 1);
+  //     return [...left, ...right];
+  //   });
+  // };
 
-  console.log(animal);
+  // const animal = users.users.filter((x) => x.id == 2);
 
   return (
     // <MyContext.Provider value={{ error, currentUser, onAddTweet }}>
@@ -127,7 +130,9 @@ const Home = (props) => {
       <div className="container" style={{ marginTop: '5rem' }}>
         <Switch>
           <Route exact path="/">
-            <h2>{greeting}, Elisha Avior!</h2>
+            <h2>
+              {greeting}, {currentUser.firstName} {currentUser.lastName}!
+            </h2>
             <ul>
               <li>
                 <NavLink
@@ -156,7 +161,7 @@ const Home = (props) => {
             </ul>
           </Route>
           <Route path="/my_pets">
-            <MyPetsList pets={pets.pets} onDeleteItem={handleOnDeleteItem} />
+            <MyPetsList pets={pets} currentUser={currentUser} />
           </Route>
 
           {/* <Route path="/pets/:id">
@@ -164,7 +169,7 @@ const Home = (props) => {
           </Route> */}
 
           <Route path="/pets/:id">
-            <PetProfile pets={pets.pets} />
+            <PetProfile pets={pets} currentUser={currentUser} />
           </Route>
 
           <Route path="/profile">
@@ -173,13 +178,18 @@ const Home = (props) => {
           </Route>
 
           <Route path="/admin">
-            <AdminDashboard users={users.users} />
+            <AdminDashboard users={users} />
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>
 
           <Route path="/add_pet">
             <AddPet />
             {/* <Profile currentUser={authUser.uid}></Profile> */}
+          </Route>
+
+          <Route path="/search">
+            <Search />
+            {/* <SignOut /> */}
           </Route>
 
           <Route path="/sign_out">
