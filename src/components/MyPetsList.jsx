@@ -46,8 +46,6 @@ const MyPetsList = (props) => {
 
   return (
     <>
-      {/* <div className="container"> */}
-
       <div id="accordion">
         <div className="card">
           <div className="card-header" id="headingOne">

@@ -1,6 +1,7 @@
 import React from 'react';
 // import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { createPet } from '../lib/api';
 
 const AddPet = (props) => {
   // const { item } = props;
@@ -11,10 +12,13 @@ const AddPet = (props) => {
   const {
     register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+    createPet(data);
+  };
 
   // useEffect(() => {
   //   isMounted.current = true;
@@ -45,14 +49,22 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                value=""
+                // value=""
                 placeholder="Pet name"
-                {...register('PetName', {
+                {...register('name', {
                   required: true,
                   min: 1,
-                  maxLength: 80,
+                  maxLength: 100,
                 })}
               />
+            </div>
+
+            <div className="col-5 mb-4">
+              <label className="form-label">Type</label>
+              <select className="form-control" {...register('type')}>
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+              </select>
             </div>
 
             <div className="col-5 mb-4">
@@ -61,24 +73,24 @@ const AddPet = (props) => {
                 className="form-control"
                 type="text"
                 placeholder="Breed"
-                {...register('Breed', {
-                  required: true,
-                  min: 1,
+                {...register('breed', {
+                  required: false,
+                  // min: 1,
                   maxLength: 100,
                 })}
               />
             </div>
 
-            <div className="col-10 mb-4">
+            <div className="col-5 mb-4">
               <label className="form-label">Color</label>
               <input
                 className="form-control"
                 type="text"
                 placeholder="Color"
-                {...register('Color', {
-                  required: true,
-                  minLength: 6,
-                  maxLength: 12,
+                {...register('color', {
+                  required: false,
+                  // minLength: 1,
+                  maxLength: 100,
                 })}
               />
             </div>
@@ -89,8 +101,9 @@ const AddPet = (props) => {
                 className="form-control"
                 type="number"
                 placeholder="Height"
-                {...register('Height', {
-                  required: true,
+                defaultValue="0"
+                {...register('height', {
+                  required: false,
                   // min: 4,
                   // pattern: /^\S+@\S+$/i,
                 })}
@@ -103,8 +116,9 @@ const AddPet = (props) => {
                 className="form-control"
                 type="number"
                 placeholder="Weight"
-                {...register('Weight', {
-                  required: true,
+                defaultValue="0"
+                {...register('weight', {
+                  required: false,
                   // min: 4,
                   // pattern: /^\S+@\S+$/i,
                 })}
@@ -114,13 +128,13 @@ const AddPet = (props) => {
             <div className="col-10 mb-4">
               <label className="form-label">Hypoallergenic</label>
               <input
-                className="form-control"
-                type="text"
+                // className="form-control"
+                type="checkbox"
                 placeholder="Hypoallergenic"
-                {...register('Hypoallergenic', {
-                  required: true,
-                  minLength: 6,
-                  maxLength: 12,
+                {...register('hypoallergenic', {
+                  required: false,
+                  // minLength: 1,
+                  maxLength: 100,
                 })}
               />
             </div>
@@ -131,10 +145,10 @@ const AddPet = (props) => {
                 className="form-control"
                 type="text"
                 placeholder="Dietary restrictions"
-                {...register('DietaryRestrictions', {
-                  required: true,
-                  minLength: 6,
-                  maxLength: 12,
+                {...register('diet', {
+                  required: false,
+                  // minLength: 1,
+                  maxLength: 100,
                 })}
               />
             </div>
@@ -145,7 +159,7 @@ const AddPet = (props) => {
           <textarea
             className="form-control"
             style={{ height: '20rem' }}
-            {...register('Bio', { required: true, min: 1 })}
+            {...register('bio', { required: false, min: 1 })}
           />
         </div>
         <div className="col-12 mb-4">
