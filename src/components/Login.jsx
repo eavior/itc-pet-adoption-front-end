@@ -1,16 +1,30 @@
 import React from 'react';
 // import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { login } from '../lib/api';
+import { useAuth } from '../context/auth';
 
 export default function Login() {
+  const auth = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  // const onSubmit = (data) => console.log(data);
+  // console.log(errors);
+  const onSubmit = async (data) => {
+    try {
+      console.log(data);
+      const { token, user } = await login(data);
+      await auth.saveUserId(user.id);
+      await auth.saveToken(token);
+    } catch (error) {
+      console.log(error);
+      alert('There is something wrong with the email and/or password');
+    }
+  };
 
   return (
     <>
@@ -23,7 +37,7 @@ export default function Login() {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('Email', {
+                {...register('email', {
                   required: true,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
@@ -37,7 +51,7 @@ export default function Login() {
                 className="form-control"
                 type="password"
                 placeholder="Password"
-                {...register('Password', { required: true })}
+                {...register('password', { required: true })}
               />
             </div>
           </div>

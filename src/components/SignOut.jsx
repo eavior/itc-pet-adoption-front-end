@@ -1,11 +1,15 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
+import { useAuth } from '../context/auth';
 
-const SignOut = (props) => {
+const SignOut = () => {
   const isMounted = useRef(false);
+  const auth = useAuth();
 
   useEffect(() => {
     isMounted.current = true;
+
+    auth.removeToken();
 
     return () => {
       isMounted.current = false;

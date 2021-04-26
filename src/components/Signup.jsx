@@ -1,16 +1,32 @@
 import React from 'react';
 // import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { signUp, login } from '../lib/api';
+import { useAuth } from '../context/auth';
 
 export default function SignUp() {
+  const auth = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  // const onSubmit = (data) => console.log(data);
+  // console.log(errors);
+
+  const onSubmit = async (data) => {
+    try {
+      console.log(data);
+      await signUp(data);
+      const { token, user } = await login(data);
+      await auth.saveUserId(user.id);
+      await auth.saveToken(token);
+    } catch (error) {
+      console.log(error);
+      alert('There is something wrong with the email and/or password');
+    }
+  };
 
   return (
     <>
@@ -22,9 +38,9 @@ export default function SignUp() {
               <input
                 className="form-control"
                 type="text"
-                value=""
+                // value=""
                 placeholder="First name"
-                {...register('First name', {
+                {...register('firstName', {
                   required: true,
                   min: 1,
                   maxLength: 80,
@@ -38,7 +54,7 @@ export default function SignUp() {
                 className="form-control"
                 type="text"
                 placeholder="Last name"
-                {...register('Last name', {
+                {...register('lastName', {
                   required: true,
                   min: 1,
                   maxLength: 100,
@@ -51,8 +67,8 @@ export default function SignUp() {
               <input
                 className="form-control"
                 type="tel"
-                placeholder="Mobile number"
-                {...register('Mobile number', {
+                placeholder="Phone number"
+                {...register('phoneNumber', {
                   required: true,
                   minLength: 6,
                   maxLength: 12,
@@ -66,7 +82,7 @@ export default function SignUp() {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('Email', {
+                {...register('email', {
                   required: true,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
@@ -80,7 +96,7 @@ export default function SignUp() {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('Email', {
+                {...register('emailCheck', {
                   required: true,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
@@ -94,7 +110,7 @@ export default function SignUp() {
                 className="form-control"
                 type="password"
                 placeholder="Password"
-                {...register('Password', { required: true })}
+                {...register('password', { required: true })}
               />
             </div>
 
@@ -104,7 +120,7 @@ export default function SignUp() {
                 className="form-control"
                 type="password"
                 placeholder="Password"
-                {...register('Password', { required: true })}
+                {...register('passwordCheck', { required: true })}
               />
             </div>
           </div>
