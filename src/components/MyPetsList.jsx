@@ -1,46 +1,85 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import PetItem from './PetItem';
+import { useAuth } from '../context/auth';
+import { getOwnedPets, getSavedPets } from '../lib/api';
 
 const MyPetsList = (props) => {
+   const isMounted = useRef(false);
+  const { currentUserId } = props;
+  const auth = useAuth();
+  const [ownedPets, setOwnedPets] = useState('');
+  const [savedPets, setSavedPets] = useState('');
+  const [noOwnedPets, setNoOwnedPets] = useState(null);
+  const [noSavedPets, setNoSavedPets] = useState(null);
+
+  useEffect(() => {
+        isMounted.current = true;
+
+    getOwnedPets(currentUserId, auth.token).then((data) => {
+      setOwnedPets(`${data.owned}`);
+      console.log(data);
+      console.log(ownedPets);
+    });
+
+    getSavedPets(currentUserId, auth.token).then((data) => {
+      setSavedPets(`${data.saved}`);
+      console.log(data);
+      console.log(savedPets);
+    });
+    ownedPets.length <= 1 ? setNoOwnedPets(true) : setNoOwnedPets(false);
+    savedPets.length <= 1 ? setNoSavedPets(true) : setNoSavedPets(false);
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, [ownedPets.length, savedPets.length]);
+
   const { pets, currentUser } = props;
-  const [noPets, setNoPets] = useState(null);
+
   // const [toggle, setToggle] = useState(null);
-  const isMounted = useRef(false);
+
   // const [amountToShow, setAmountToShow] = useState(10);
   // const [pets, setPets] = useState([]);
   // const [lastKey, setLastKey] = useState('');
 
-  useEffect(() => {
-    isMounted.current = true;
-    pets.length <= 1 ? setNoPets(true) : setNoPets(false);
-    return () => {
-      isMounted.current = false;
-    };
-  }, [pets.length]);
+  // useEffect(() => {
+  //   isMounted.current = true;
+  //   pets.length <= 1 ? setNoPets(true) : setNoPets(false);
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, [pets.length]);
 
-  const noPetsMessage = (
+  const noOwnedPetsMessage = (
     <div>You don't have any adopted or fostered pets yet. </div>
   );
 
-  const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
+    const noSavedPetsMessage = (
+    <div>You don't have any saved pets yet. </div>
+  );
+
+  // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
+
   const allOwnedPets = (
     <div className="row row-cols-1 row-cols-md-auto g-4">
-      {petsOfCurrentUser.map((item) => {
+      {/* {petsOfCurrentUser.map((item) => {
         return <PetItem key={item.id} item={item} currentUser={currentUser} />;
-      })}
+      })} */}
     </div>
   );
 
-  const savedPetIDs = currentUser.savedPets;
-  const petsSavedByCurrentUser = pets.filter(function (item) {
-    return savedPetIDs.includes(item.id);
-  });
+  // const savedPetIDs = currentUser.savedPets;
+
+  // const petsSavedByCurrentUser = pets.filter(function (item) {
+  //   return savedPetIDs.includes(item.id);
+  // });
+
   const allSavedPets = (
     <div className="row row-cols-1 row-cols-md-auto g-4">
-      {petsSavedByCurrentUser.map((item) => {
+      {/* {petsSavedByCurrentUser.map((item) => {
         return <PetItem key={item.id} item={item} currentUser={currentUser} />;
-      })}
+      })} */}
     </div>
   );
 
@@ -67,8 +106,8 @@ const MyPetsList = (props) => {
             aria-labelledby="headingOne"
             data-parent="#accordion">
             <div className="card-body">
-              <div>{noPets && noPetsMessage}</div>
-              <div>{!noPets && allOwnedPets}</div>
+              <div>{noOwnedPets && noOwnedPetsMessage}</div>
+              <div>{!noOwnedPets && allOwnedPets}</div>
             </div>
           </div>
         </div>
@@ -91,8 +130,8 @@ const MyPetsList = (props) => {
             aria-labelledby="headingTwo"
             data-parent="#accordion">
             <div className="card-body">
-              <div>{noPets && noPetsMessage}</div>
-              <div>{!noPets && allSavedPets}</div>
+              <div>{noSavedPets && noSavedPetsMessage}</div>
+              <div>{!noSavedPets && allSavedPets}</div>
             </div>
           </div>
         </div>

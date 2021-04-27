@@ -61,7 +61,7 @@ const AppRouter = () => {
     <Router>
       <Switch>
         <Route path="/unknown_user">
-          {auth.token && <Redirect to="/" />}
+          {auth.token && <Redirect to="/home" />}
           {!auth.token && <HomeLoggedOut />}
         </Route>
         {/* <Route path="/signup">
@@ -81,8 +81,11 @@ const AppRouter = () => {
         <PrivateRoute exact path="/products">
           {/* <MyProducts /> */}
         </PrivateRoute>
+        <PrivateRoute path="/home">
+          <Home />
+        </PrivateRoute>
         <PrivateRoute path="/">
-          <Home userID={3} />
+          <Home />
         </PrivateRoute>
       </Switch>
     </Router>

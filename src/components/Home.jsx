@@ -6,7 +6,7 @@ import {
   Route,
   NavLink,
 } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UserProfile from './UserProfile';
 
 import AdminDashboard from './AdminDashboard';
@@ -16,6 +16,8 @@ import MyPetsList from './MyPetsList';
 import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
 import Search from './Search';
+import { useAuth } from '../context/auth';
+import { getCurrentUserName } from '../lib/api';
 
 const NavBar = () => {
   return (
@@ -32,7 +34,7 @@ const NavBar = () => {
                 className="nav-link"
                 activeClassName="active"
                 exact
-                to="/">
+                to="/home">
                 Home
               </NavLink>
             </li>
@@ -94,13 +96,28 @@ const NavBar = () => {
   );
 };
 
-const Home = (props) => {
+const Home = () => {
   //   const {authUser} = props;
+  // const auth = useAuth();
   const [pets] = useState(mockDB.pets);
   const [users] = useState(mockDB.users);
   const [greeting] = useState('Good morning');
-  const { userID } = props;
-  const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
+  // const { userID } = props;
+  // const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
+
+  const auth = useAuth();
+  const [currentUserName, setCurrentUserName] = useState('');
+  const [currentUserId, setCurrentUserId] = useState('');
+  useEffect(() => {
+    console.log(auth.token);
+    getCurrentUserName(auth.token)
+      .then((data) => {
+        setCurrentUserName(
+          `${data.user[0].first_name} ${data.user[0].last_name}`
+        );
+      })
+      .then(() => console.log(currentUserName));
+  }, [auth.token]);
 
   // const adopted = currentUser[0].
   // useEffect(() => {
@@ -129,9 +146,9 @@ const Home = (props) => {
       <NavBar />
       <div className="container" style={{ marginTop: '5rem' }}>
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/home">
             <h2>
-              {greeting}, {currentUser.firstName} {currentUser.lastName}!
+              {greeting}, {currentUserName}!
             </h2>
             <ul>
               <li>
@@ -161,7 +178,7 @@ const Home = (props) => {
             </ul>
           </Route>
           <Route path="/my_pets">
-            <MyPetsList pets={pets} currentUser={currentUser} />
+            <MyPetsList currentUserId={currentUserId} />
           </Route>
 
           {/* <Route path="/pets/:id">
@@ -169,7 +186,7 @@ const Home = (props) => {
           </Route> */}
 
           <Route path="/pets/:id">
-            <PetProfile pets={pets} currentUser={currentUser} />
+            <PetProfile pets={pets} currentUserId={currentUserId} />
           </Route>
 
           <Route path="/profile">
@@ -178,7 +195,7 @@ const Home = (props) => {
           </Route>
 
           <Route path="/admin">
-            <AdminDashboard users={users} />
+            <AdminDashboard currentUserId={currentUserId} />
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>
 

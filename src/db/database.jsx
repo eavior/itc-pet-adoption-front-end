@@ -1,3 +1,26 @@
+// const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
+
+// const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
+// const allOwnedPets = (
+//   <div className="row row-cols-1 row-cols-md-auto g-4">
+//     {petsOfCurrentUser.map((item) => {
+//       return <PetItem key={item.id} item={item} currentUser={currentUser} />;
+//     })}
+//   </div>
+// );
+
+// const savedPetIDs = currentUser.savedPets;
+// const petsSavedByCurrentUser = pets.filter(function (item) {
+//   return savedPetIDs.includes(item.id);
+// });
+// const allSavedPets = (
+//   <div className="row row-cols-1 row-cols-md-auto g-4">
+//     {petsSavedByCurrentUser.map((item) => {
+//       return <PetItem key={item.id} item={item} currentUser={currentUser} />;
+//     })}
+//   </div>
+// );
+
 const mockDB = {
   users: [
     {
