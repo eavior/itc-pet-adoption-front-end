@@ -18,6 +18,7 @@ import PetProfile from './PetProfile';
 import Search from './Search';
 import { useAuth } from '../context/auth';
 import { getCurrentUserName } from '../lib/api';
+import AllPets from './AllPets';
 
 const NavBar = () => {
   return (
@@ -52,6 +53,14 @@ const NavBar = () => {
                 activeClassName="active"
                 to="/search">
                 Search a pet
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                activeClassName="active"
+                to="/all_pets">
+                All pets
               </NavLink>
             </li>
             <li className="nav-item">
@@ -115,8 +124,12 @@ const Home = () => {
         setCurrentUserName(
           `${data.user[0].first_name} ${data.user[0].last_name}`
         );
+        setCurrentUserId(data.user[0].id);
       })
-      .then(() => console.log(currentUserName));
+      .then(() => {
+        console.log(currentUserName);
+        console.log(currentUserId);
+      });
   }, [auth.token]);
 
   // const adopted = currentUser[0].
@@ -185,8 +198,12 @@ const Home = () => {
             <PetProfile pets={pets.pets} onDeleteItem={handleOnDeleteItem} />
           </Route> */}
 
+          <Route path="/all_pets">
+            <AllPets currentUserId={currentUserId} />
+          </Route>
+
           <Route path="/pets/:id">
-            <PetProfile pets={pets} currentUserId={currentUserId} />
+            <PetProfile currentUserId={currentUserId} />
           </Route>
 
           <Route path="/profile">

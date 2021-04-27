@@ -1,26 +1,40 @@
 import React from 'react';
-// import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getPetById } from '../lib/api';
+import { useAuth } from '../context/auth';
+
 const PetProfile = (props) => {
-  const { pets, currentUser } = props;
+  const { pets, currentUserId } = props;
+
+  console.log(currentUserId);
   // We can use the `useParams` hook here to access
   // the dynamic pieces of the URL.
   let { id } = useParams();
-  // const isMounted = useRef(false);
+  const auth = useAuth();
+  const [pet, setPet] = useState({});
+  const [isOnUserSaveList, setIsOnUserSaveList] = useState(false);
 
-  let pet = pets.filter((x) => x.id === +id)[0];
+  const isMounted = useRef(false);
 
-  /*
+  // let pet = pets.filter((x) => x.id === +id)[0];
+
+  console.log('test');
+
   useEffect(() => {
     isMounted.current = true;
-
+    console.log(id);
+    console.log(auth.token);
+    getPetById(id, auth.token).then((data) => {
+      setPet(data.pet[0]);
+      console.log(data.pet[0]);
+    });
     return () => {
       isMounted.current = false;
     };
   }, []);
-  */
 
-  const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
+  // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
 
   // const isCurrentUserOwner = () => {
   //   find current petID in array petsOfCurrentUser; do through SQL
@@ -28,11 +42,12 @@ const PetProfile = (props) => {
 
   return (
     <>
+      <div>Test</div>
       <div className="card mb-3">
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src={pet.image}
+              src={pet.picture_url}
               alt="..."
               className="img-fluid"
               style={{ height: '15rem', width: '30rem', objectFit: 'contain' }}
@@ -75,9 +90,11 @@ const PetProfile = (props) => {
                   Foster {pet.name}
                 </button>
               )}
-              <button className="btn btn-primary float-end ms-2">
-                Save {pet.name} to your 'saved pets' list
-              </button>
+              {!isOnUserSaveList && (
+                <button className="btn btn-primary float-end ms-2">
+                  Save {pet.name} to your 'saved pets' list
+                </button>
+              )}
             </p>
           </div>
         </div>

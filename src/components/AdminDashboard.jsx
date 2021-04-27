@@ -27,7 +27,7 @@ const AdminDashboard = (props) => {
   const loadPets = async () => {
     try {
       const pets = await getPets();
-      setPetList(pets.pet);
+      setPetList(pets.pets);
     } catch (error) {
       console.log(error);
     }

@@ -12,19 +12,16 @@ function getAuthConfig(token) {
 
 export async function signUp(signUpData) {
   const response = await axios.post(`${BaseUrl}/users/signup`, signUpData);
-  console.log(response.data);
   return response.data;
 }
 
 export async function login(loginData) {
   const response = await axios.post(`${BaseUrl}/users/login`, loginData);
-  console.log(response.data);
   return response.data;
 }
 
 export async function getCurrentUserName(token) {
   const response = await axios.get(BaseUrl + '/home', getAuthConfig(token));
-  console.log(response.data);
   return response.data;
 }
 
@@ -33,7 +30,6 @@ export async function getOwnedPets(id, token) {
     BaseUrl + '/pets/owned/' + id,
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -42,11 +38,25 @@ export async function getSavedPets(id, token) {
     BaseUrl + '/pets/saved/' + id,
     getAuthConfig(token)
   );
-  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllPets(token) {
+  const response = await axios.get(BaseUrl + '/pets/', getAuthConfig(token));
+  return response.data.pets;
+}
+
+export async function getPetById(petID, token) {
+  console.log(petID);
+  const response = await axios.get(
+    `${BaseUrl}/pets/` + petID,
+    getAuthConfig(token)
+  );
   return response.data;
 }
 
 export async function getPets(id, token) {
+  console.log('3');
   const response = await axios.get(`${BaseUrl}/pets`, getAuthConfig(token));
   return response.data;
 }
