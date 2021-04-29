@@ -1,7 +1,7 @@
 import React from 'react';
 // import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { createPet } from '../lib/api';
+import { createPet, createImage } from '../lib/api';
 
 const AddPet = (props) => {
   // const { item } = props;
@@ -11,13 +11,18 @@ const AddPet = (props) => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
-    createPet(data);
+    // const file = data.image[0];
+    const formData = new FormData();
+    formData.append('image', data.image[0]);
+    createPet(data, formData);
+    // createImage(data.picture_url);
   };
 
   // useEffect(() => {
@@ -49,7 +54,7 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                // value=""
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Pet name"
                 {...register('name', {
                   required: true,
@@ -72,6 +77,7 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Breed"
                 {...register('breed', {
                   required: false,
@@ -86,6 +92,7 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Color"
                 {...register('color', {
                   required: false,
@@ -102,9 +109,11 @@ const AddPet = (props) => {
                 type="number"
                 placeholder="Height"
                 defaultValue="0"
+                onChange={(e) => setValue(+e.target.value)}
                 {...register('height', {
                   required: false,
-                  // min: 4,
+                  min: 0,
+                  max: 999,
                   // pattern: /^\S+@\S+$/i,
                 })}
               />
@@ -115,12 +124,13 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="number"
-                placeholder="Weight"
                 defaultValue="0"
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Weight"
                 {...register('weight', {
                   required: false,
-                  // min: 4,
-                  // pattern: /^\S+@\S+$/i,
+                  min: 0,
+                  max: 999,
                 })}
               />
             </div>
@@ -130,6 +140,7 @@ const AddPet = (props) => {
               <input
                 // className="form-control"
                 type="checkbox"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Hypoallergenic"
                 {...register('hypoallergenic', {
                   required: false,
@@ -144,6 +155,7 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Dietary restrictions"
                 {...register('diet', {
                   required: false,
@@ -152,12 +164,41 @@ const AddPet = (props) => {
                 })}
               />
             </div>
+
+            <div className="col-10 mb-4">
+              <label className="form-label">Picture</label>
+              <input
+                className="form-control"
+                type="text"
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Picture url"
+                {...register('picture_url', {
+                  required: false,
+                  // minLength: 1,
+                  maxLength: 100,
+                })}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="formFile" className="form-label">
+                Attach a picture
+              </label>
+              <input
+                className="form-control"
+                type="file"
+                {...register('image', {
+                  required: false,
+                })}
+              />
+            </div>
           </div>
         </div>
         <div className="col-4">
-          <label className="form-label">Picture</label>
+          <label className="form-label">Biography</label>
           <textarea
             className="form-control"
+            onChange={(e) => setValue(e.target.value)}
             style={{ height: '20rem' }}
             {...register('bio', { required: false, min: 1 })}
           />
@@ -166,18 +207,17 @@ const AddPet = (props) => {
           <button type="submit" className="btn btn-primary float-end ms-4">
             Save your changes
           </button>
-
-          <input className="btn btn-primary float-end" type="submit" />
+          {/* <input className="btn btn-primary float-end" type="submit" />
           <div className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
               id="gridCheck"></input>
-            <label className="form-check-label">
-              {/* for="gridCheck" */}
-              Agree to the user terms
-            </label>
-          </div>
+            <label className="form-check-label"> */}
+          {/* for="gridCheck" */}
+          Agree to the user terms
+          {/* </label>
+          </div> */}
         </div>
       </form>
     </>

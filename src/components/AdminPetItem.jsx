@@ -7,8 +7,9 @@ const AdminPetItem = (props) => {
   return (
     <>
       <li>
-        {item.name} ({item.type}). To add: edit function (same page as 'add pet'
-        but with values filled in).
+        <a href={`/pets/edit/${item.id}`}>
+          {item.name} | {item.type} | {item.status}
+        </a>
       </li>
     </>
   );

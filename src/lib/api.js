@@ -47,22 +47,67 @@ export async function getAllPets(token) {
 }
 
 export async function getPetById(petID, token) {
-  console.log(petID);
   const response = await axios.get(
     `${BaseUrl}/pets/` + petID,
+    getAuthConfig(token)
+  );
+  const pet = response.data.pet[0];
+  // const pet = response.data.pet;
+  console.log(pet);
+  return pet;
+}
+
+export async function updatePet(petId, updatedPet, token) {
+  const response = await axios.put(
+    `${BaseUrl}/pets/` + petId,
+    updatedPet,
     getAuthConfig(token)
   );
   return response.data;
 }
 
-export async function getPets(id, token) {
-  console.log('3');
-  const response = await axios.get(`${BaseUrl}/pets`, getAuthConfig(token));
+export async function createPet(newPet, formData) {
+  const response = await axios.post(`${BaseUrl}/pets`, newPet, formData);
+  console.log(response.data);
   return response.data;
 }
 
-export async function createPet(newPet) {
-  const response = await axios.post(`${BaseUrl}/pets`, newPet);
+// WORKING HERE:
+
+export async function createImage(petId, newImage) {
+  console.log(petId, newImage);
+  const response = await axios.post(
+    `${BaseUrl}/pets/picture_url/` + petId,
+    newImage,
+    {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${newImage._boundary}`,
+      },
+    }
+  );
+  console.log('test');
+  return response.data;
+}
+
+// axios.post(URL, data, {
+//   headers: {
+//     'accept': 'application/json',
+//     'Accept-Language': 'en-US,en;q=0.8',
+//     'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+//   }
+// })
+//   .then((response) => {
+//     //handle success
+//   }).catch((error) => {
+//     //handle error
+//   });
+// };}
+
+export async function getPets(id, token) {
+  console.log('3');
+  const response = await axios.get(`${BaseUrl}/pets`, getAuthConfig(token));
   return response.data;
 }
 

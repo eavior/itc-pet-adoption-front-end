@@ -19,6 +19,7 @@ import Search from './Search';
 import { useAuth } from '../context/auth';
 import { getCurrentUserName } from '../lib/api';
 import AllPets from './AllPets';
+import AdminEditPet from './AdminEditPet';
 
 const NavBar = () => {
   return (
@@ -130,7 +131,8 @@ const Home = () => {
         console.log(currentUserName);
         console.log(currentUserId);
       });
-  }, [auth.token]);
+  }, []);
+  //  }, [auth.token]);
 
   // const adopted = currentUser[0].
   // useEffect(() => {
@@ -200,6 +202,10 @@ const Home = () => {
 
           <Route path="/all_pets">
             <AllPets currentUserId={currentUserId} />
+          </Route>
+
+          <Route path="/pets/edit/:id">
+            <AdminEditPet currentUserId={currentUserId} />
           </Route>
 
           <Route path="/pets/:id">
