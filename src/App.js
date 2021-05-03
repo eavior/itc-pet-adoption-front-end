@@ -29,6 +29,7 @@ import {
 import Login from './components/Login';
 
 import AuthProvider, { useAuth } from './context/auth';
+import AdminDashboard from './components/AdminDashboard';
 
 function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -61,7 +62,8 @@ const AppRouter = () => {
     <Router>
       <Switch>
         <Route path="/unknown_user">
-          {auth.token && <Redirect to="/home" />}
+          {auth.token && <Redirect to="/" />}
+          {/* {auth.token && <Home />} */}
           {!auth.token && <HomeLoggedOut />}
         </Route>
         {/* <Route path="/signup">
@@ -81,12 +83,12 @@ const AppRouter = () => {
         <PrivateRoute exact path="/products">
           {/* <MyProducts /> */}
         </PrivateRoute>
-        <PrivateRoute path="/home">
-          <Home />
-        </PrivateRoute>
         <PrivateRoute path="/">
           <Home />
         </PrivateRoute>
+        {/* <PrivateRoute path="/admin">
+          <Home />
+        </PrivateRoute> */}
       </Switch>
     </Router>
   );

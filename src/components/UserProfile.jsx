@@ -1,18 +1,63 @@
 import React from 'react';
-// import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuth } from '../context/auth';
+import { getCurrentUser, updateCurrentUser } from '../lib/api';
 
-export default function UserProfile() {
+const UserProfile = (props) => {
+  const { currentUserData, currentUserId } = props;
+  const [email, setEmail] = useState('');
+  const [user, setUser] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const auth = useAuth();
+
   const {
     register,
     handleSubmit,
+    setValue,
     // formState: { errors },
   } = useForm();
-  // const [currentEntries, setCurrentEntries] = useState({
-  //   fname: 'Elisha',
-  //   lname: 'Avior',
-  // });
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const editedUser = await updateCurrentUser(data.id, data, auth.token);
+      setUser(editedUser.user);
+      alert(editedUser.result);
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (errorMessage) alert(errorMessage);
+  }, [errorMessage]);
+
+  useEffect(() => {
+    console.log(currentUserId);
+    console.log(currentUserData);
+
+    getCurrentUser(auth.token).then((user) => {
+      const fields = [
+        'id',
+        'bio',
+        // 'email',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'role',
+        'updated',
+      ];
+      fields.forEach((field) => setValue(field, user[field]));
+      setEmail(user.email);
+    });
+  }, []);
+
+  useEffect(() => {
+    document.body.style.backgroundColor = 'red';
+  }, []);
 
   return (
     <>
@@ -24,9 +69,9 @@ export default function UserProfile() {
               <input
                 className="form-control"
                 type="text"
-                value=""
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="First name"
-                {...register('First name', {
+                {...register('first_name', {
                   required: true,
                   min: 1,
                   maxLength: 80,
@@ -39,8 +84,9 @@ export default function UserProfile() {
               <input
                 className="form-control"
                 type="text"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Last name"
-                {...register('Last name', {
+                {...register('last_name', {
                   required: true,
                   min: 1,
                   maxLength: 100,
@@ -53,8 +99,9 @@ export default function UserProfile() {
               <input
                 className="form-control"
                 type="tel"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Mobile number"
-                {...register('Mobile number', {
+                {...register('phone_number', {
                   required: true,
                   minLength: 6,
                   maxLength: 12,
@@ -62,14 +109,23 @@ export default function UserProfile() {
               />
             </div>
 
+            <div className="col-10 mb-4">
+              <label className="form-label">
+                The email address linked to this account is {email}.<br />
+                If you want to change the email address, or the password, please
+                fill in the relevant fields below.
+              </label>
+            </div>
+
             <div className="col-md-5 mb-4">
-              <label className="form-label">Email</label>
+              <label className="form-label">New email</label>
               <input
                 className="form-control"
                 type="email"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Email"
-                {...register('Email', {
-                  required: true,
+                {...register('email', {
+                  required: false,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
                 })}
@@ -82,8 +138,8 @@ export default function UserProfile() {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('Email', {
-                  required: true,
+                {...register('email', {
+                  required: false,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
                 })}
@@ -91,12 +147,13 @@ export default function UserProfile() {
             </div>
 
             <div className="col-md-5 mb-4">
-              <label className="form-label">Password</label>
+              <label className="form-label">New password</label>
               <input
                 className="form-control"
                 type="password"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Password"
-                {...register('Password', { required: true })}
+                {...register('password', { required: false })}
               />
             </div>
 
@@ -105,8 +162,9 @@ export default function UserProfile() {
               <input
                 className="form-control"
                 type="password"
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Password"
-                {...register('Password', { required: true })}
+                {...register('password', { required: false })}
               />
             </div>
           </div>
@@ -115,8 +173,9 @@ export default function UserProfile() {
           <label className="form-label">Short bio</label>
           <textarea
             className="form-control"
+            onChange={(e) => setValue(e.target.value)}
             style={{ height: '20rem' }}
-            {...register('Bio', { required: true, min: 1 })}
+            {...register('bio', { required: false, min: 0 })}
           />
         </div>
         <div className="col-12 mb-4">
@@ -141,4 +200,6 @@ export default function UserProfile() {
       </form>
     </>
   );
-}
+};
+
+export default UserProfile;

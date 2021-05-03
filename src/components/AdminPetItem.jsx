@@ -65,7 +65,7 @@ const AdminPetItem = (props) => {
           className="btn-close float-end"
           aria-label="Close"
           onClick={() => setShowModal(false)}></button>
-        <AdminEditPet id={item.id} />
+        <AdminEditPet id={item.id} onCloseModal={() => setShowModal(false)} />
       </Modal>
     </>
   );

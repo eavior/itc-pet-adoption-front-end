@@ -20,10 +20,28 @@ export async function login(loginData) {
   return response.data;
 }
 
-export async function getCurrentUserName(token) {
-  const response = await axios.get(BaseUrl + '/home', getAuthConfig(token));
+export async function getCurrentUser(token) {
+  const response = await axios.get(BaseUrl + '/', getAuthConfig(token));
+  const user = response.data.user[0];
+  return user;
+}
+
+export async function updateCurrentUser(userId, updatedUser, token) {
+  const response = await axios.put(
+    `${BaseUrl}/users/` + userId,
+    updatedUser,
+    getAuthConfig(token)
+  );
   return response.data;
 }
+
+// export async function getCurrentUserData(id, token) {
+//   const response = await axios.get(
+//     BaseUrl + '/users/' + id,
+//     getAuthConfig(token)
+//   );
+//   return response.data;
+// }
 
 export async function getOwnedPets(id, token) {
   const response = await axios.get(
@@ -46,7 +64,6 @@ export async function getAllPets(token) {
     BaseUrl + '/pets/all/',
     getAuthConfig(token)
   );
-  console.log(response.data.pets);
   return response.data.pets;
 }
 
@@ -57,7 +74,6 @@ export async function getPetById(petID, token) {
   );
   const pet = response.data.pet[0];
   // const pet = response.data.pet;
-  console.log(pet);
   return pet;
 }
 
@@ -70,19 +86,23 @@ export async function updatePet(petId, updatedPet, token) {
   return response.data;
 }
 
-export async function createPet(newPet, formData) {
-  const response = await axios.post(`${BaseUrl}/pets`, newPet, formData);
-  console.log(response.data);
+export async function createPet(newPet, token) {
+  const response = await axios.post(
+    `${BaseUrl}/pets`,
+    newPet,
+    getAuthConfig(token)
+  );
   return response.data;
 }
 
 // WORKING HERE:
 
-export async function createImage(petId, newImage) {
-  console.log(petId, newImage);
+export async function createImage(newImage, token) {
+  console.log(newImage);
   const response = await axios.post(
-    `${BaseUrl}/pets/picture_url/` + petId,
+    `${BaseUrl}/pets/picture_url/`,
     newImage,
+    getAuthConfig(token),
     {
       headers: {
         accept: 'application/json',
@@ -115,12 +135,12 @@ export async function getPets(id, token) {
   return response.data;
 }
 
-export async function getUsers(id) {
-  const response = await axios.get(`${BaseUrl}/users/`);
+export async function getUsers(token) {
+  const response = await axios.get(`${BaseUrl}/users/`, getAuthConfig(token));
   return response.data;
 }
 
-export async function createUser(user) {
-  const response = await axios.post(`${BaseUrl}/user`, user);
-  return response.data;
-}
+// export async function createUser(user) {
+//   const response = await axios.post(`${BaseUrl}/user`, user);
+//   return response.data;
+// }

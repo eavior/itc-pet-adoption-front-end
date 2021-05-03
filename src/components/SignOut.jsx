@@ -8,7 +8,7 @@ const SignOut = () => {
 
   useEffect(() => {
     isMounted.current = true;
-
+    auth.resetAdminStatus();
     auth.removeToken();
 
     return () => {

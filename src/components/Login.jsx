@@ -18,7 +18,9 @@ export default function Login() {
     try {
       console.log(data);
       const { token, user } = await login(data);
-      await auth.saveUserId(user.id);
+      // await auth.saveUserId(user.id);
+      if (user.role === 'admin') await auth.saveAdminStatus(true);
+      else await auth.saveAdminStatus(false);
       await auth.saveToken(token);
     } catch (error) {
       console.log(error);

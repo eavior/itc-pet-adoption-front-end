@@ -14,6 +14,7 @@ const PetProfile = (props) => {
   const auth = useAuth();
   const [pet, setPet] = useState({});
   const [isOnUserSaveList, setIsOnUserSaveList] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const isMounted = useRef(false);
 
@@ -25,15 +26,26 @@ const PetProfile = (props) => {
     isMounted.current = true;
     console.log(id);
     console.log(auth.token);
-    getPetById(id, auth.token).then((data) => {
-      console.log(data);
-      setPet(data);
-      console.log(data);
-    });
+    try {
+      getPetById(id, auth.token).then((data) => {
+        console.log(data);
+        setPet(data);
+        console.log(data);
+      });
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+
     return () => {
       isMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (errorMessage) alert(errorMessage);
+  }, [errorMessage]);
 
   // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
 

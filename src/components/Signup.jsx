@@ -1,11 +1,12 @@
 import React from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUp, login } from '../lib/api';
 import { useAuth } from '../context/auth';
 
 export default function SignUp() {
   const auth = useAuth();
+  const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -19,14 +20,26 @@ export default function SignUp() {
     try {
       console.log(data);
       await signUp(data);
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+      return;
+    }
+    try {
       const { token, user } = await login(data);
       await auth.saveUserId(user.id);
       await auth.saveToken(token);
     } catch (error) {
-      console.log(error);
-      alert('There is something wrong with the email and/or password');
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
+
+  useEffect(() => {
+    alert(errorMessage);
+  }, [errorMessage]);
 
   return (
     <>

@@ -16,6 +16,7 @@ const AdminDashboard = (props) => {
   const [petList, setPetList] = useState([]);
   const [userList, setUserList] = useState([]);
   const isMounted = useRef(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
@@ -31,7 +32,9 @@ const AdminDashboard = (props) => {
       const pets = await getAllPets(auth.token);
       setPetList(pets);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
 
@@ -40,9 +43,15 @@ const AdminDashboard = (props) => {
       const users = await getUsers(auth.token);
       setUserList(users.user);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
+
+  useEffect(() => {
+    if (errorMessage) alert(errorMessage);
+  }, [errorMessage]);
 
   return (
     <>

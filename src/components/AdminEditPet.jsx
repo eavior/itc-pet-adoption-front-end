@@ -4,10 +4,16 @@ import { useForm } from 'react-hook-form';
 import { getPetById, updatePet, createImage } from '../lib/api';
 import { useAuth } from '../context/auth';
 import { useParams } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import FormData from 'form-data';
 
 const AdminEditPet = (props) => {
-  const { id } = props;
+  const { id, onCloseModal } = props;
   // const [displayName, setdisplayName] = useState(null);
   const [pet, setPet] = useState({});
   // const [petName, setPetName] = useState('');
@@ -21,6 +27,7 @@ const AdminEditPet = (props) => {
   // const [petDiet, setPetDiet] = useState('');
   // const [petBio, setPetBio] = useState('');
   const [petPicURL, setPetPicURL] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const isMounted = useRef(false);
   const auth = useAuth();
@@ -38,8 +45,11 @@ const AdminEditPet = (props) => {
     try {
       const editedPet = await updatePet(id, data, auth.token);
       setPet(editedPet.pet);
+      onCloseModal();
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
 
@@ -56,43 +66,22 @@ const AdminEditPet = (props) => {
       console.log(pair[0] + ', ' + pair[1]);
     }
     try {
-      const imageUrl = await createImage(id, formData);
+      const imageUrl = await createImage(formData, auth.token);
       console.log(imageUrl.picture_url);
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
       console.log(petPicURL);
       // setPet(editedPet.pet);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
 
-  //   let data = new FormData();
-  // data.append('file', file, file.name);
-
-  // return (dispatch) => {
-  // axios.post(URL, data, {
-  //   headers: {
-  //     'accept': 'application/json',
-  //     'Accept-Language': 'en-US,en;q=0.8',
-  //     'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-  //   }
-  // })
-  //   .then((response) => {
-  //     //handle success
-  //   }).catch((error) => {
-  //     //handle error
-  //   });
-  // };}
-
-  // useEffect(() => {
-  //   // isMounted.current = true;
-  //   loadPet();
-
-  //   // return () => {
-  //   //   isMounted.current = false;
-  //   // };
-  // }, []);
+  useEffect(() => {
+    if (errorMessage) alert(errorMessage);
+  }, [errorMessage]);
 
   useEffect(() => {
     // if (!isAddMode) {
@@ -119,35 +108,14 @@ const AdminEditPet = (props) => {
     // }
   }, []);
 
-  // const loadPet = async () => {
+  // const submitPet = async (data) => {
   //   try {
-  //     const pet = await getPetById(id, auth.token);
-  //     setPet(pet.pet[0]);
-  //     setPetName(pet.pet[0].name);
-  //     setPetStatus(pet.pet[0].status);
-  //     setPetType(pet.pet[0].type);
-  //     setPetBreed(pet.pet[0].breed);
-  //     setPetColor(pet.pet[0].color);
-  //     setPetHeight(pet.pet[0].height);
-  //     setPetWeight(pet.pet[0].weight);
-  //     setPetHypoallergenic(pet.pet[0].hypoallergenic);
-  //     setPetDiet(pet.pet[0].diet);
-  //     setPetBio(pet.pet[0].bio);
-  //     setPetPicURL(pet.pet[0].picture_url);
-  //     console.log(pet.pet[0]);
+  //     const editedPet = await updatePet(id, data, auth.token);
+  //     setPet(editedPet.pet);
   //   } catch (error) {
   //     console.log(error);
   //   }
   // };
-
-  const submitPet = async (data) => {
-    try {
-      const editedPet = await updatePet(id, data, auth.token);
-      setPet(editedPet.pet);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <>
@@ -251,7 +219,7 @@ const AdminEditPet = (props) => {
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Weight"
                 {...register('weight', {
-                  required: false,
+                  required: true,
                   min: 0,
                   max: 999,
                 })}
