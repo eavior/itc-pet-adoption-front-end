@@ -26,8 +26,9 @@ const PetProfile = (props) => {
     console.log(id);
     console.log(auth.token);
     getPetById(id, auth.token).then((data) => {
-      setPet(data.pet[0]);
-      console.log(data.pet[0]);
+      console.log(data);
+      setPet(data);
+      console.log(data);
     });
     return () => {
       isMounted.current = false;

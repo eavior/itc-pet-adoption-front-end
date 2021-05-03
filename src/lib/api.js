@@ -42,7 +42,11 @@ export async function getSavedPets(id, token) {
 }
 
 export async function getAllPets(token) {
-  const response = await axios.get(BaseUrl + '/pets/', getAuthConfig(token));
+  const response = await axios.get(
+    BaseUrl + '/pets/all/',
+    getAuthConfig(token)
+  );
+  console.log(response.data.pets);
   return response.data.pets;
 }
 

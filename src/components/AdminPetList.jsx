@@ -17,7 +17,8 @@ const AdminPetList = (props) => {
 
   return (
     <>
-      <ul>{allPets}</ul>
+      <div className="list-group">{allPets}</div>
+      {/* <ul>{allPets}</ul> */}
     </>
   );
 };

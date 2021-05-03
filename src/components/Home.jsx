@@ -17,7 +17,7 @@ import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
 import Search from './Search';
 import { useAuth } from '../context/auth';
-import { getCurrentUserName } from '../lib/api';
+import { getAllPets, getCurrentUserName } from '../lib/api';
 import AllPets from './AllPets';
 import AdminEditPet from './AdminEditPet';
 
@@ -109,8 +109,9 @@ const NavBar = () => {
 const Home = () => {
   //   const {authUser} = props;
   // const auth = useAuth();
-  const [pets] = useState(mockDB.pets);
   const [users] = useState(mockDB.users);
+  const [pets, setPets] = useState('');
+  const [petList, setPetList] = useState([]);
   const [greeting] = useState('Good morning');
   // const { userID } = props;
   // const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
@@ -120,6 +121,23 @@ const Home = () => {
   const [currentUserId, setCurrentUserId] = useState('');
   useEffect(() => {
     console.log(auth.token);
+    // getCurrentUserName(auth.token)
+    //   .then((data) => {
+    //     setCurrentUserName(
+    //       `${data.user[0].first_name} ${data.user[0].last_name}`
+    //     );
+    //     setCurrentUserId(data.user[0].id);
+    //   })
+    //   .then(() => {
+    //     console.log(currentUserName);
+    //     console.log(currentUserId);
+    //   });
+    loadUser();
+    loadPets();
+  }, []);
+  //  }, [auth.token]);
+
+  const loadUser = () => {
     getCurrentUserName(auth.token)
       .then((data) => {
         setCurrentUserName(
@@ -131,8 +149,16 @@ const Home = () => {
         console.log(currentUserName);
         console.log(currentUserId);
       });
-  }, []);
-  //  }, [auth.token]);
+  };
+
+  const loadPets = async () => {
+    try {
+      const pets = await getAllPets(auth.token);
+      setPetList(pets);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // const adopted = currentUser[0].
   // useEffect(() => {
@@ -201,7 +227,7 @@ const Home = () => {
           </Route> */}
 
           <Route path="/all_pets">
-            <AllPets currentUserId={currentUserId} />
+            <AllPets currentUserId={currentUserId} petList={petList} />
           </Route>
 
           <Route path="/pets/edit/:id">

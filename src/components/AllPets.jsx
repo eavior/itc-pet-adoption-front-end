@@ -1,64 +1,21 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
 import PetItem from './PetItem';
-import { useAuth } from '../context/auth';
-import { getAllPets } from '../lib/api';
 
 const AllPets = (props) => {
-  const { currentUserId } = props;
-  const isMounted = useRef(false);
-  const auth = useAuth();
-  const [pets, setPets] = useState('');
-  const [noPets, setNoPets] = useState(true);
+  const { petList, currentUserId } = props;
 
-  useEffect(() => {
-    isMounted.current = true;
-
-    getAllPets(auth.token)
-      .then((data) => {
-        setPets(data);
-      })
-      .then(pets.length <= 1 ? setNoPets(true) : setNoPets(false));
-
-    return () => {
-      isMounted.current = false;
-    };
-  });
-
-  // const [toggle, setToggle] = useState(null);
-
-  // const [amountToShow, setAmountToShow] = useState(10);
-  // const [pets, setPets] = useState([]);
-  // const [lastKey, setLastKey] = useState('');
-
-  // useEffect(() => {
-  //   isMounted.current = true;
-  //   pets.length <= 1 ? setNoPets(true) : setNoPets(false);
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, [pets.length]);
-
-  const noPetsMessage = <div>There are no pets in the database... </div>;
-
-  // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
-  const allPets = noPets ? (
-    <div></div>
-  ) : (
-    <div className="row row-cols-1 row-cols-md-auto g-4">
-      {pets.map((item) => {
-        return (
-          <PetItem key={item.id} item={item} currentUserId={currentUserId} />
-        );
-      })}
-    </div>
-  );
-
-  // const savedPetIDs = currentUser.savedPets;
-
-  // const petsSavedByCurrentUser = pets.filter(function (item) {
-  //   return savedPetIDs.includes(item.id);
-  // });
+  const allPets =
+    petList.length < 1 ? (
+      <div>There are no pets in the list</div>
+    ) : (
+      <div className="row row-cols-1 row-cols-md-auto g-4">
+        {petList.map((item) => {
+          return (
+            <PetItem key={item.id} item={item} currentUserId={currentUserId} />
+          );
+        })}
+      </div>
+    );
 
   return (
     <>
@@ -83,8 +40,7 @@ const AllPets = (props) => {
             aria-labelledby="headingOne"
             data-parent="#accordion">
             <div className="card-body">
-              <div>{noPets && noPetsMessage}</div>
-              <div>{!noPets && allPets}</div>
+              <div>{allPets}</div>
             </div>
           </div>
         </div>

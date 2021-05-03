@@ -6,11 +6,13 @@ import UsersList from './AdminstUserList';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 
-import { getPets, getUsers } from '../lib/api';
+import { getAllPets, getUsers } from '../lib/api';
 import AdminPetList from './AdminPetList';
+import { useAuth } from '../context/auth';
 
 const AdminDashboard = (props) => {
   const { users } = props;
+  const auth = useAuth();
   const [petList, setPetList] = useState([]);
   const [userList, setUserList] = useState([]);
   const isMounted = useRef(false);
@@ -26,8 +28,8 @@ const AdminDashboard = (props) => {
 
   const loadPets = async () => {
     try {
-      const pets = await getPets();
-      setPetList(pets.pets);
+      const pets = await getAllPets(auth.token);
+      setPetList(pets);
     } catch (error) {
       console.log(error);
     }
@@ -35,7 +37,7 @@ const AdminDashboard = (props) => {
 
   const loadUsers = async () => {
     try {
-      const users = await getUsers();
+      const users = await getUsers(auth.token);
       setUserList(users.user);
     } catch (error) {
       console.log(error);
