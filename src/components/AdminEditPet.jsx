@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { getPetById, updatePet, createImage } from '../lib/api';
+import { getPetById, updatePet, createImage, deletePet } from '../lib/api';
 import { useAuth } from '../context/auth';
 import { useParams } from 'react-router-dom';
 import {
@@ -13,22 +13,13 @@ import {
 import FormData from 'form-data';
 
 const AdminEditPet = (props) => {
-  const { id, onCloseModal } = props;
-  // const [displayName, setdisplayName] = useState(null);
+  const { id, onCloseModal, onLoadPets } = props;
+  console.log(id);
+  console.log(onLoadPets);
+  console.log(onCloseModal);
   const [pet, setPet] = useState({});
-  // const [petName, setPetName] = useState('');
-  // const [petStatus, setPetStatus] = useState('');
-  // const [petType, setPetType] = useState('');
-  // const [petBreed, setPetBreed] = useState('');
-  // const [petColor, setPetColor] = useState('');
-  // const [petHeight, setPetHeight] = useState(0);
-  // const [petWeight, setPetWeight] = useState(0);
-  // const [petHypoallergenic, setPetHypoallergenic] = useState(false);
-  // const [petDiet, setPetDiet] = useState('');
-  // const [petBio, setPetBio] = useState('');
   const [petPicURL, setPetPicURL] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const isMounted = useRef(false);
   const auth = useAuth();
   // let { id } = useParams();
@@ -41,7 +32,6 @@ const AdminEditPet = (props) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const editedPet = await updatePet(id, data, auth.token);
       setPet(editedPet.pet);
@@ -53,25 +43,27 @@ const AdminEditPet = (props) => {
     }
   };
 
+  const onDelete = async () => {
+    console.log(id);
+    try {
+      const deletedPet = await deletePet(id, auth.token);
+      onLoadPets();
+      onCloseModal();
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
   const onSubmitPicture = async (data) => {
-    alert('hello');
-    console.log(data.image);
     const file = data.image[0];
-    console.log(file);
-    console.log(file.name);
     let formData = new FormData();
     formData.append('image', file, file.name);
-    console.log(formData);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
     try {
       const imageUrl = await createImage(formData, auth.token);
-      console.log(imageUrl.picture_url);
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
-      console.log(petPicURL);
-      // setPet(editedPet.pet);
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -107,15 +99,6 @@ const AdminEditPet = (props) => {
     });
     // }
   }, []);
-
-  // const submitPet = async (data) => {
-  //   try {
-  //     const editedPet = await updatePet(id, data, auth.token);
-  //     setPet(editedPet.pet);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   return (
     <>
@@ -239,8 +222,6 @@ const AdminEditPet = (props) => {
               id="inputGroupFile04"
               aria-describedby="inputGroupFileAddon04"
               aria-label="Upload"
-              className="form-control"
-              type="file"
               {...register('image', {
                 required: false,
               })}
@@ -319,21 +300,19 @@ const AdminEditPet = (props) => {
                 {...register('bio', { required: false, min: 1 })}
               />
             </div>
-            <div className="col-12 mb-4">
+            <div className="col-6 mb-4">
+              <button
+                type="button"
+                onClick={handleSubmit(onDelete)}
+                className="btn btn-primary float-end ms-4">
+                {' '}
+                Delete
+              </button>
+            </div>
+            <div className="col-6 mb-4">
               <button type="submit" className="btn btn-primary float-end ms-4">
                 Save your changes
               </button>
-              {/* <input className="btn btn-primary float-end" type="submit" />
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="gridCheck"></input>
-            <label className="form-check-label"> */}
-              {/* for="gridCheck" */}
-              Agree to the user terms
-              {/* </label>
-          </div> */}
             </div>
           </div>
         </div>

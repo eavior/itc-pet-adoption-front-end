@@ -23,7 +23,6 @@ import AdminEditPet from './AdminEditPet';
 
 const NavBar = () => {
   const auth = useAuth();
-  console.log(auth.admin);
   return (
     <nav className="container navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div className="container-fluid">
@@ -144,7 +143,6 @@ const Home = () => {
     try {
       const pets = await getAllPets(auth.token);
       setPetList(pets);
-      console.log(petList);
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`

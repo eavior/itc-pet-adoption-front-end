@@ -1,32 +1,35 @@
 import React from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { login } from '../lib/api';
 import { useAuth } from '../context/auth';
 
 export default function Login() {
   const auth = useAuth();
+  const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = (data) => console.log(data);
-  // console.log(errors);
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const { token, user } = await login(data);
       // await auth.saveUserId(user.id);
       if (user.role === 'admin') await auth.saveAdminStatus(true);
       else await auth.saveAdminStatus(false);
       await auth.saveToken(token);
     } catch (error) {
-      console.log(error);
-      alert('There is something wrong with the email and/or password');
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
     }
   };
+
+  useEffect(() => {
+    alert(errorMessage);
+  }, [errorMessage]);
 
   return (
     <>

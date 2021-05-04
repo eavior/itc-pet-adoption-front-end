@@ -10,19 +10,23 @@ const AdminUserList = (props) => {
     ) : (
       <div className="row row-cols-1 row-cols-md-auto g-4">
         {userList.map((item) => {
-          console.log(userList.indexOf(item));
-          return <AdminUserItem key={item.id} item={item} index={userList.indexOf(item)}/>;
+          return (
+            <AdminUserItem
+              key={item.id}
+              item={item}
+              index={userList.indexOf(item)}
+            />
+          );
         })}
       </div>
     );
 
   return (
     <>
-
-<div>
-    {/* <div className="accordion" id="accordionExample"> */}
-        {allUsers}      </div>
-
+      <div>
+        {/* <div className="accordion" id="accordionExample"> */}
+        {allUsers}{' '}
+      </div>
     </>
   );
 };

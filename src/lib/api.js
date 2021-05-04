@@ -86,6 +86,15 @@ export async function updatePet(petId, updatedPet, token) {
   return response.data;
 }
 
+export async function deletePet(petId, token) {
+  console.log(petId);
+  const response = await axios.delete(
+    `${BaseUrl}/pets/` + petId,
+    getAuthConfig(token)
+  );
+  return response.data;
+}
+
 export async function createPet(newPet, token) {
   const response = await axios.post(
     `${BaseUrl}/pets`,
@@ -95,10 +104,49 @@ export async function createPet(newPet, token) {
   return response.data;
 }
 
+export async function adoptPet(petId, adoptionUpdate, token) {
+  console.log(petId);
+  const response = await axios.put(
+    `${BaseUrl}/pets/adopt/` + petId,
+    adoptionUpdate,
+    getAuthConfig(token)
+  );
+  console.log(response.data);
+  return response.data;
+}
+
+export async function savePet(petId, userId, token) {
+  const response = await axios.post(
+    `${BaseUrl}/pets/save/${petId}/user/${userId}`,
+    userId,
+    getAuthConfig(token)
+  );
+  console.log(response.data);
+  return response.data;
+}
+
+export async function removePet(petId, userId, token) {
+  console.log(petId);
+  const response = await axios.delete(
+    `${BaseUrl}/pets/remove/${petId}/user/${userId}`,
+    getAuthConfig(token)
+  );
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getSaveStatus(petId, userId, token) {
+  const response = await axios.get(
+    `${BaseUrl}/pets/save/${petId}/user/${userId}`,
+    getAuthConfig(token)
+  );
+  console.log(response.data);
+  return response.data;
+}
+
 // WORKING HERE:
 
 export async function createImage(newImage, token) {
-  console.log(newImage);
   const response = await axios.post(
     `${BaseUrl}/pets/picture_url/`,
     newImage,
@@ -111,7 +159,6 @@ export async function createImage(newImage, token) {
       },
     }
   );
-  console.log('test');
   return response.data;
 }
 
@@ -130,7 +177,6 @@ export async function createImage(newImage, token) {
 // };}
 
 export async function getPets(id, token) {
-  console.log('3');
   const response = await axios.get(`${BaseUrl}/pets`, getAuthConfig(token));
   return response.data;
 }

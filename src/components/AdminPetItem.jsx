@@ -5,7 +5,7 @@ import Login from './Login';
 import AdminEditPet from './AdminEditPet';
 
 const AdminPetItem = (props) => {
-  const { item } = props;
+  const { item, onLoadPets } = props;
   const [showModal, setShowModal] = useState(false);
 
   const modalStyle = {
@@ -65,7 +65,11 @@ const AdminPetItem = (props) => {
           className="btn-close float-end"
           aria-label="Close"
           onClick={() => setShowModal(false)}></button>
-        <AdminEditPet id={item.id} onCloseModal={() => setShowModal(false)} />
+        <AdminEditPet
+          id={item.id}
+          onCloseModal={() => setShowModal(false)}
+          onLoadPets={() => onLoadPets()}
+        />
       </Modal>
     </>
   );

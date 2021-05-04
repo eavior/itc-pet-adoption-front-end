@@ -19,7 +19,6 @@ const UserProfile = (props) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const editedUser = await updateCurrentUser(data.id, data, auth.token);
       setUser(editedUser.user);
@@ -36,9 +35,6 @@ const UserProfile = (props) => {
   }, [errorMessage]);
 
   useEffect(() => {
-    console.log(currentUserId);
-    console.log(currentUserData);
-
     getCurrentUser(auth.token).then((user) => {
       const fields = [
         'id',

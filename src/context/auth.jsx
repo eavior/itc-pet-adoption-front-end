@@ -52,21 +52,18 @@ const AuthProvider = (props) => {
 
   useEffect(() => {
     // localforage.getItem(userKey).then((userId) => {
-    //   console.log(userId);
     //   if (userId) {
     //     setUserId(userId);
     //   }
     // });
 
     localforage.getItem(adminKey).then((userId) => {
-      console.log(userId);
       if (userId) {
         setUserId(userId);
       }
     });
 
     localforage.getItem(adminKey).then((admin) => {
-      console.log(admin);
       if (admin) {
         setAdmin(admin);
       }

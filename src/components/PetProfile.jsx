@@ -1,13 +1,18 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPetById } from '../lib/api';
+import {
+  getPetById,
+  adoptPet,
+  savePet,
+  removePet,
+  getSaveStatus,
+} from '../lib/api';
 import { useAuth } from '../context/auth';
 
 const PetProfile = (props) => {
-  const { pets, currentUserId } = props;
-
-  console.log(currentUserId);
+  const { currentUserId } = props;
+  console.log(props);
   // We can use the `useParams` hook here to access
   // the dynamic pieces of the URL.
   let { id } = useParams();
@@ -15,29 +20,18 @@ const PetProfile = (props) => {
   const [pet, setPet] = useState({});
   const [isOnUserSaveList, setIsOnUserSaveList] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [userId, setUserId] = useState(currentUserId);
 
   const isMounted = useRef(false);
 
   // let pet = pets.filter((x) => x.id === +id)[0];
 
-  console.log('test');
-
   useEffect(() => {
     isMounted.current = true;
+    console.log(userId);
+    console.log(currentUserId);
     console.log(id);
-    console.log(auth.token);
-    try {
-      getPetById(id, auth.token).then((data) => {
-        console.log(data);
-        setPet(data);
-        console.log(data);
-      });
-    } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
-    }
-
+    loadPetById().then(loadSavedStatus());
     return () => {
       isMounted.current = false;
     };
@@ -47,15 +41,85 @@ const PetProfile = (props) => {
     if (errorMessage) alert(errorMessage);
   }, [errorMessage]);
 
+  useEffect(() => {
+    if (!userId) setUserId(currentUserId);
+    console.log(userId);
+  }, [currentUserId]);
+
+  const loadPetById = async () => {
+    try {
+      getPetById(id, auth.token).then((data) => {
+        setPet(data);
+      });
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
+  const loadSavedStatus = async () => {
+    try {
+      getSaveStatus(id, currentUserId, auth.token).then((data) => {
+        console.log(data.savedStatus.length);
+        if (data.savedStatus.length > 0) setIsOnUserSaveList(true);
+        if ((data.savedStatus.length = 0)) setIsOnUserSaveList(false);
+        // setPet(data);
+      });
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
   // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
 
   // const isCurrentUserOwner = () => {
   //   find current petID in array petsOfCurrentUser; do through SQL
   // };
 
+  const petAdoption = async (petId, userId, status) => {
+    const adoptionUpdate = { userId: userId, status: status };
+    // console.log('pet' + petId + 'user' + userId + 'type' + typeOfCare);
+    try {
+      const adoptedPet = await adoptPet(petId, adoptionUpdate, auth.token);
+      console.log(adoptedPet);
+      loadPetById();
+      loadSavedStatus();
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
+  const addToSaveList = async (petId, userId) => {
+    try {
+      const savedPet = await savePet(petId, userId, auth.token);
+      console.log(savedPet);
+      loadPetById();
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
+  const removeFromSaveList = async (petId, userId) => {
+    try {
+      const removedPet = await removePet(petId, userId, auth.token);
+      console.log(removedPet);
+      loadPetById();
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
   return (
     <>
-      <div>Test</div>
       <div className="card mb-3">
         <div className="row g-0">
           <div className="col-md-4">
@@ -94,18 +158,40 @@ const PetProfile = (props) => {
                 Adoption status: {pet.status}
               </small>
               {pet.status === 'Available' && (
-                <button className="btn btn-primary float-end ms-2">
+                <button
+                  className="btn btn-primary float-end ms-2"
+                  onClick={() => petAdoption(pet.id, currentUserId, 'Adopted')}>
                   Adopt {pet.name}
                 </button>
               )}
               {pet.status === 'Available' && (
-                <button className="btn btn-primary float-end ms-2">
+                <button
+                  className="btn btn-primary float-end ms-2"
+                  onClick={() =>
+                    petAdoption(pet.id, currentUserId, 'Fostered')
+                  }>
                   Foster {pet.name}
                 </button>
               )}
+              {pet.status !== 'Available' && (
+                <button
+                  className="btn btn-primary float-end ms-2"
+                  onClick={() => petAdoption(pet.id, 'Available', 'Available')}>
+                  Return {pet.name}
+                </button>
+              )}
               {!isOnUserSaveList && (
-                <button className="btn btn-primary float-end ms-2">
-                  Save {pet.name} to your 'saved pets' list
+                <button
+                  className="btn btn-primary float-end ms-2"
+                  onClick={() => addToSaveList(pet.id, currentUserId)}>
+                  Add {pet.name} to your 'saved pets' list
+                </button>
+              )}
+              {isOnUserSaveList && (
+                <button
+                  className="btn btn-primary float-end ms-2"
+                  onClick={() => removeFromSaveList(pet.id, currentUserId)}>
+                  Remove {pet.name} from your 'saved pets' list
                 </button>
               )}
             </p>

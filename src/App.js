@@ -54,7 +54,6 @@ function PrivateRoute({ children, ...rest }) {
 
 const AppRouter = () => {
   let auth = useAuth();
-  console.log(auth);
   if (!auth.isInitiallyLoaded) {
     return <div></div>;
   }
@@ -74,15 +73,6 @@ const AppRouter = () => {
           {auth.token && <Redirect to="/" />}
           {!auth.token && <Login />}
         </Route> */}
-        <PrivateRoute path="/products/new">
-          {/* <ProductForm /> */}
-        </PrivateRoute>
-        <PrivateRoute path="/products/:productId">
-          {/* <Product /> */}
-        </PrivateRoute>
-        <PrivateRoute exact path="/products">
-          {/* <MyProducts /> */}
-        </PrivateRoute>
         <PrivateRoute path="/">
           <Home />
         </PrivateRoute>

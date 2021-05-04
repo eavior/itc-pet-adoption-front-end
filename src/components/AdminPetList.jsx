@@ -2,7 +2,7 @@ import React from 'react';
 import AdminPetItem from './AdminPetItem';
 
 const AdminPetList = (props) => {
-  const { petList } = props;
+  const { petList, onLoadPets } = props;
 
   const allPets =
     petList.length < 1 ? (
@@ -10,7 +10,13 @@ const AdminPetList = (props) => {
     ) : (
       <div className="row row-cols-1 row-cols-md-auto g-4">
         {petList.map((item) => {
-          return <AdminPetItem key={item.id} item={item} />;
+          return (
+            <AdminPetItem
+              key={item.id}
+              item={item}
+              onLoadPets={() => onLoadPets()}
+            />
+          );
         })}
       </div>
     );

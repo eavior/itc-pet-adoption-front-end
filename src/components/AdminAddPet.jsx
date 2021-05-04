@@ -3,8 +3,10 @@ import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { createPet, createImage } from '../lib/api';
 import { useAuth } from '../context/auth';
+import FormData from 'form-data';
 
 const AddPet = (props) => {
+  const { onLoadPets } = props;
   const auth = useAuth();
   // const { item } = props;
   // const [displayName, setdisplayName] = useState(null);
@@ -16,24 +18,21 @@ const AddPet = (props) => {
   const {
     register,
     setValue,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  //   // const file = data.image[0];
-  //   const formData = new FormData();
-  //   formData.append('image', data.image[0]);
-  //   createPet(data, formData);
-  //   // createImage(data.picture_url);
-  // };
-
   const onSubmit = async (data) => {
     console.log(data);
     try {
+      console.log(data);
       const createdPet = await createPet(data, auth.token);
       setPet(createdPet.pet);
+      onLoadPets();
+      alert('The pet has been created');
+      setPetPicURL('');
+      reset();
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -42,23 +41,17 @@ const AddPet = (props) => {
   };
 
   const onSubmitPicture = async (data) => {
-    console.log(data.image);
+    console.log(data);
+    console.log(data.image[0]);
     const file = data.image[0];
-    console.log(file);
-    console.log(file.name);
+
     let formData = new FormData();
     formData.append('image', file, file.name);
-    console.log(formData);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
     try {
       const imageUrl = await createImage(formData, auth.token);
-      console.log(imageUrl.picture_url);
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
-      console.log(petPicURL);
-      // setPet(editedPet.pet);
+      console.log(imageUrl.picture_url);
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -70,24 +63,14 @@ const AddPet = (props) => {
     if (errorMessage) alert(errorMessage);
   }, [errorMessage]);
 
-  // useEffect(() => {
-  //   isMounted.current = true;
+  useEffect(() => {
+    // if (!isAddMode) {
+    // get user and set form fields
 
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, []);
+    console.log('do something');
 
-  // const handleOnNewPet = (newPet) => {
-  //   setPets((prevPets) => [...prevPets, newPet]);
-  // };
-  // const handleOnDeleteItem = (itemIndex) => {
-  //   setPets((prevPets) => {
-  //     const left = prevPets.slice(0, itemIndex);
-  //     const right = prevPets.slice(itemIndex + 1);
-  //     return [...left, ...right];
-  //   });
-  // };
+    // }
+  }, []);
 
   return (
     <>
@@ -211,8 +194,6 @@ const AddPet = (props) => {
               id="inputGroupFile04"
               aria-describedby="inputGroupFileAddon04"
               aria-label="Upload"
-              className="form-control"
-              type="file"
               {...register('image', {
                 required: false,
               })}
@@ -222,6 +203,7 @@ const AddPet = (props) => {
               type="button"
               id="inputGroupFileAddon04"
               onClick={handleSubmit(onSubmitPicture)}>
+              {/* onClick={(data) => await onSubmitPicture(data)}> */}
               Upload
             </button>
           </div>
@@ -297,17 +279,20 @@ const AddPet = (props) => {
               <button type="submit" className="btn btn-primary float-end ms-4">
                 Save your changes
               </button>
-              {/* <input className="btn btn-primary float-end" type="submit" />
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="gridCheck"></input>
-            <label className="form-check-label"> */}
-              {/* for="gridCheck" */}
-              Agree to the user terms
-              {/* </label>
-          </div> */}
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={handleSubmit(onSubmit)}>
+                Save (2)
+              </button>
+              <button
+                onClick={(e) =>
+                  dispatchEvent(
+                    new Event('submit', { cancellable: true, bubbles: true })
+                  )
+                }>
+                Submit form
+              </button>
             </div>
           </div>
         </div>

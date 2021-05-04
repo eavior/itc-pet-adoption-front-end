@@ -101,7 +101,7 @@ const AdminDashboard = (props) => {
             aria-labelledby="headingTwo"
             data-parent="#accordionExample">
             <div className="card-body">
-              <AdminPetList petList={petList} />
+              <AdminPetList petList={petList} onLoadPets={() => loadPets()} />
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const AdminDashboard = (props) => {
             aria-labelledby="headingThree"
             data-parent="#accordionExample">
             <div className="card-body">
-              <AddPet />
+              <AddPet onLoadPets={() => loadPets()} />
             </div>
           </div>
         </div>

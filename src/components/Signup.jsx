@@ -13,12 +13,8 @@ export default function SignUp() {
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = (data) => console.log(data);
-  // console.log(errors);
-
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       await signUp(data);
     } catch (error) {
       setErrorMessage(
