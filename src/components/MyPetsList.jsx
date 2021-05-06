@@ -5,37 +5,94 @@ import { useAuth } from '../context/auth';
 import { getOwnedPets, getSavedPets } from '../lib/api';
 
 const MyPetsList = (props) => {
-   const isMounted = useRef(false);
-  const { currentUserId } = props;
+  const isMounted = useRef(false);
+  const { currentUserId, ownedPets, savedPets } = props;
   const auth = useAuth();
-  const [ownedPets, setOwnedPets] = useState('');
-  const [savedPets, setSavedPets] = useState('');
+  // const [ownedPets, setOwnedPets] = useState({});
+  // const [savedPets, setSavedPets] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
   const [noOwnedPets, setNoOwnedPets] = useState(null);
   const [noSavedPets, setNoSavedPets] = useState(null);
 
+  // useEffect(() => {
+  //   isMounted.current = true;
+  //   // console.log(props);
+  //   // loadOwnedPets();
+  //   // loadSavedPets();
+  //   // console.log(ownedPets.length);
+  //   // console.log(savedPets.length);
+
+  //   // console.log(ownedPets);
+  //   // console.log(savedPets);
+
+  //   // ownedPets.length <= 1 ? setNoOwnedPets(true) : setNoOwnedPets(false);
+  //   // savedPets.length <= 1 ? setNoSavedPets(true) : setNoSavedPets(false);
+
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, [ownedPets.length, savedPets.length]);
+
   useEffect(() => {
-        isMounted.current = true;
+    console.log(props);
+    // loadOwnedPets
+    //   .then((data) => {
+    //     setFlag(!!data);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   })
+    //   .finally(() => {
+    //     setIsAuthenticating(false);
+    //   });
+  }, [props]);
 
-    getOwnedPets(currentUserId, auth.token).then((data) => {
-      setOwnedPets(`${data.owned}`);
-      console.log(data);
-      console.log(ownedPets);
-    });
+  useEffect(() => {
+    console.log(props);
+    console.log(ownedPets);
+    // loadOwnedPets
+    //   .then((data) => {
+    //     setFlag(!!data);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   })
+    //   .finally(() => {
+    //     setIsAuthenticating(false);
+    //   });
+  });
 
-    getSavedPets(currentUserId, auth.token).then((data) => {
-      setSavedPets(`${data.saved}`);
-      console.log(data);
-      console.log(savedPets);
-    });
-    ownedPets.length <= 1 ? setNoOwnedPets(true) : setNoOwnedPets(false);
-    savedPets.length <= 1 ? setNoSavedPets(true) : setNoSavedPets(false);
+  // useEffect(() => {
+  //   isMounted.current = true;
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, [ownedPets.length, savedPets.length]);
+  //   return () => {
+  //     isMounted.current = false;
+  //   };
+  // }, [ownedPets.length, savedPets.length]);
 
-  const { pets, currentUser } = props;
+  // const loadOwnedPets = async () => {
+  //   try {
+  //     getOwnedPets(auth.token).then((data) => {
+  //       setOwnedPets(data.owned);
+  //     });
+  //   } catch (error) {
+  //     setErrorMessage(
+  //       `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+  //     );
+  //   }
+  // };
+
+  // const loadSavedPets = async () => {
+  //   try {
+  //     getSavedPets(auth.token).then((data) => {
+  //       setSavedPets(data.saved);
+  //     });
+  //   } catch (error) {
+  //     setErrorMessage(
+  //       `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+  //     );
+  //   }
+  // };
 
   // const [toggle, setToggle] = useState(null);
 
@@ -55,33 +112,83 @@ const MyPetsList = (props) => {
     <div>You don't have any adopted or fostered pets yet. </div>
   );
 
-    const noSavedPetsMessage = (
-    <div>You don't have any saved pets yet. </div>
-  );
+  const noSavedPetsMessage = <div>You don't have any saved pets yet. </div>;
 
   // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
 
-  const allOwnedPets = (
-    <div className="row row-cols-1 row-cols-md-auto g-4">
-      {/* {petsOfCurrentUser.map((item) => {
-        return <PetItem key={item.id} item={item} currentUser={currentUser} />;
-      })} */}
-    </div>
-  );
+  // const allOwnedPets = (
+  //   <div className="row row-cols-1 row-cols-md-auto g-4">
+  //     {ownedPets.map((item) => {
+  //       return <PetItem key={item.id} item={item} currentUser={currentUser} />;
+  //     })}
+  //   </div>
+  // );
 
-  // const savedPetIDs = currentUser.savedPets;
+  // // const savedPetIDs = currentUser.savedPets;
 
-  // const petsSavedByCurrentUser = pets.filter(function (item) {
-  //   return savedPetIDs.includes(item.id);
-  // });
+  // // const petsSavedByCurrentUser = pets.filter(function (item) {
+  // //   return savedPetIDs.includes(item.id);
+  // // });
 
-  const allSavedPets = (
-    <div className="row row-cols-1 row-cols-md-auto g-4">
-      {/* {petsSavedByCurrentUser.map((item) => {
-        return <PetItem key={item.id} item={item} currentUser={currentUser} />;
-      })} */}
-    </div>
-  );
+  // const allSavedPets = (
+  //   <div className="row row-cols-1 row-cols-md-auto g-4">
+  //     {savedPets.map((item) => {
+  //       return <PetItem key={item.id} item={item} currentUser={currentUser} />;
+  //     })}
+  //   </div>
+  // );
+
+  const myOwnedPets =
+    ownedPets.length < 1 ? (
+      <div>There are no pets in the list</div>
+    ) : (
+      <div className="row row-cols-1 row-cols-md-auto g-4">
+        {ownedPets.map((item) => {
+          return (
+            <PetItem
+              key={item.id}
+              item={item}
+              // onLoadPets={() => onLoadPets()}
+            />
+          );
+        })}
+      </div>
+    );
+
+  // const myOwnedPets = async () => {
+  //   if (ownedPets.length > 1) return <div>There are no pets in the list</div>;
+  //   else
+  //     return (
+  //       <div className="row row-cols-1 row-cols-md-auto g-4">
+  //         {ownedPets.map((item) => {
+  //           return (
+  //             <PetItem
+  //               key={item.id}
+  //               item={item}
+  //               // onLoadPets={() => onLoadPets()}
+  //             />
+  //           );
+  //         })}
+  //       </div>
+  //     );
+  // };
+
+  const mySavedPets =
+    savedPets.length < 1 ? (
+      <div>There are no pets in the list</div>
+    ) : (
+      <div className="row row-cols-1 row-cols-md-auto g-4">
+        {savedPets.map((item) => {
+          return (
+            <PetItem
+              key={item.id}
+              item={item}
+              // onLoadPets={() => onLoadPets()}
+            />
+          );
+        })}
+      </div>
+    );
 
   return (
     <>
@@ -106,8 +213,7 @@ const MyPetsList = (props) => {
             aria-labelledby="headingOne"
             data-parent="#accordion">
             <div className="card-body">
-              <div>{noOwnedPets && noOwnedPetsMessage}</div>
-              <div>{!noOwnedPets && allOwnedPets}</div>
+              <div>{myOwnedPets}</div>
             </div>
           </div>
         </div>
@@ -130,8 +236,7 @@ const MyPetsList = (props) => {
             aria-labelledby="headingTwo"
             data-parent="#accordion">
             <div className="card-body">
-              <div>{noSavedPets && noSavedPetsMessage}</div>
-              <div>{!noSavedPets && allSavedPets}</div>
+              <div>{mySavedPets}</div>
             </div>
           </div>
         </div>

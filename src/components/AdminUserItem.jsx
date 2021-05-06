@@ -3,9 +3,38 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import { useEffect, useState, useRef } from 'react';
+import { useAuth } from '../context/auth';
+import { getAllPetsForUser } from '../lib/api';
 
 const AdminUserItem = (props) => {
+  const auth = useAuth();
   const { item, index } = props;
+  const [petList, setPetList] = useState([]);
+  console.log(item.id);
+  const isMounted = useRef(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    isMounted.current = true;
+    loadPetsForUser();
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const loadPetsForUser = async () => {
+    try {
+      const pets = await getAllPetsForUser(item.id, auth.token);
+      console.log(pets);
+      setPetList(pets);
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
   return (
     <>
       <p className="mb-0 mt-3">

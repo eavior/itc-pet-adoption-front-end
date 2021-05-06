@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import AddPet from './AdminAddPet';
-import UsersList from './AdminstUserList';
+import AdminUsersList from './AdminUserList';
 // import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
@@ -32,9 +32,7 @@ const AdminDashboard = (props) => {
       const pets = await getAllPets(auth.token);
       setPetList(pets);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
@@ -77,7 +75,7 @@ const AdminDashboard = (props) => {
             aria-labelledby="headingOne"
             data-parent="#accordionExample">
             <div className="card-body">
-              <UsersList userList={userList} />
+              <AdminUsersList userList={userList} />
             </div>
           </div>
         </div>

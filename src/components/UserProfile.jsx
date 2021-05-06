@@ -35,7 +35,7 @@ const UserProfile = (props) => {
   }, [errorMessage]);
 
   useEffect(() => {
-    getCurrentUser(auth.token).then((user) => {
+    getCurrentUser(auth.userId, auth.token).then((user) => {
       const fields = [
         'id',
         'bio',

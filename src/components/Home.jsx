@@ -17,7 +17,12 @@ import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
 import Search from './Search';
 import { useAuth } from '../context/auth';
-import { getAllPets, getCurrentUser } from '../lib/api';
+import {
+  getAllPets,
+  getCurrentUser,
+  getOwnedPets,
+  getSavedPets,
+} from '../lib/api';
 import AllPets from './AllPets';
 import AdminEditPet from './AdminEditPet';
 
@@ -109,7 +114,7 @@ const NavBar = () => {
   );
 };
 
-const Home = () => {
+const Home = (props) => {
   //   const {authUser} = props;
   // const auth = useAuth();
   const [users] = useState(mockDB.users);
@@ -117,22 +122,51 @@ const Home = () => {
   const [petList, setPetList] = useState([]);
   const [greeting] = useState('Good morning');
   const [errorMessage, setErrorMessage] = useState('');
-  // const { userID } = props;
+  const { userName } = props;
   // const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
 
   const auth = useAuth();
   const [currentUserName, setCurrentUserName] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [currentUserData, setCurrentUserData] = useState('');
+  const [ownedPets, setOwnedPets] = useState({});
+  const [savedPets, setSavedPets] = useState({});
 
   useEffect(() => {
+    console.log('loading home');
     loadUser();
     loadPets();
+    loadOwnedPets();
+    loadSavedPets();
   }, []);
   //  }, [auth.token]);
 
+  const loadOwnedPets = async () => {
+    try {
+      getOwnedPets(auth.userId, auth.token).then((data) => {
+        setOwnedPets(data.owned);
+      });
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
+  const loadSavedPets = async () => {
+    try {
+      getSavedPets(auth.userId, auth.token).then((data) => {
+        setSavedPets(data.saved);
+      });
+    } catch (error) {
+      setErrorMessage(
+        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
+      );
+    }
+  };
+
   const loadUser = () => {
-    getCurrentUser(auth.token).then((data) => {
+    getCurrentUser(auth.userId, auth.token).then((data) => {
       setCurrentUserName(`${data.first_name} ${data.last_name}`);
       setCurrentUserId(data.id);
       setCurrentUserData(data);
@@ -141,7 +175,9 @@ const Home = () => {
 
   const loadPets = async () => {
     try {
+      console.log(auth.userId);
       const pets = await getAllPets(auth.token);
+      console.log(pets);
       setPetList(pets);
     } catch (error) {
       setErrorMessage(
@@ -213,7 +249,11 @@ const Home = () => {
             </ul>
           </Route>
           <Route path="/my_pets">
-            <MyPetsList currentUserId={currentUserId} />
+            <MyPetsList
+              currentUserId={currentUserId}
+              ownedPets={ownedPets}
+              savedPets={savedPets}
+            />
           </Route>
 
           {/* <Route path="/pets/:id">
@@ -241,14 +281,16 @@ const Home = () => {
           </Route>
 
           <Route path="/admin">
-            {auth.admin && <AdminDashboard currentUserId={currentUserId} />}
+            {auth.admin && (
+              <AdminDashboard currentUserId={currentUserId} petList={petList} />
+            )}
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>
 
-          <Route path="/add_pet">
+          {/* <Route path="/add_pet">
             <AddPet />
-            {/* <Profile currentUser={authUser.uid}></Profile> */}
-          </Route>
+
+          </Route> */}
 
           <Route path="/search">
             <Search />

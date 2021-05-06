@@ -9,6 +9,7 @@ const SignOut = () => {
   useEffect(() => {
     isMounted.current = true;
     auth.resetAdminStatus();
+    auth.removeUserId();
     auth.removeToken();
 
     return () => {
@@ -16,7 +17,7 @@ const SignOut = () => {
     };
   }, []);
 
-  return <div>This is the SignOut page.</div>;
+  return <div>You have been signed out from the site.</div>;
 };
 
 export default SignOut;

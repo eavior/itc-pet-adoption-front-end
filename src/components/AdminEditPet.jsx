@@ -19,6 +19,7 @@ const AdminEditPet = (props) => {
   console.log(onCloseModal);
   const [pet, setPet] = useState({});
   const [petPicURL, setPetPicURL] = useState('');
+  const [type, setType] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const isMounted = useRef(false);
   const auth = useAuth();
@@ -27,9 +28,16 @@ const AdminEditPet = (props) => {
   const {
     register,
     setValue,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  console.log('start');
+
+  useEffect(() => {
+    console.log(getValues('type'));
+  }, [type]);
 
   const onSubmit = async (data) => {
     try {

@@ -16,10 +16,10 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const { token, user } = await login(data);
-      // await auth.saveUserId(user.id);
+      await auth.saveToken(token);
+      await auth.saveUserId(user.id);
       if (user.role === 'admin') await auth.saveAdminStatus(true);
       else await auth.saveAdminStatus(false);
-      await auth.saveToken(token);
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -27,8 +27,10 @@ export default function Login() {
     }
   };
 
+  console.log(errorMessage);
+
   useEffect(() => {
-    alert(errorMessage);
+    if (errorMessage !== '') alert('errer' + errorMessage);
   }, [errorMessage]);
 
   return (

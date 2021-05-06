@@ -2,7 +2,7 @@
 import './App.css';
 import Home from './components/Home';
 import HomeLoggedOut from './components/HomeLoggedOut';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { useEffect, useState, useRef } from 'react';
 
 // function App() {
@@ -27,9 +27,10 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Login from './components/Login';
-
 import AuthProvider, { useAuth } from './context/auth';
 import AdminDashboard from './components/AdminDashboard';
+
+import { getCurrentUser } from './lib/api';
 
 function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -54,6 +55,19 @@ function PrivateRoute({ children, ...rest }) {
 
 const AppRouter = () => {
   let auth = useAuth();
+  // const [currentUserName, setCurrentUserName] = useState('');
+
+  // useEffect(() => {
+  //   if (auth.token) loadUser();
+  //   console.log('approuter');
+  // }, []);
+
+  // const loadUser = async () => {
+  //   await getCurrentUser(auth.userId, auth.token).then((data) => {
+  //     setCurrentUserName(`${data.first_name} ${data.last_name}`);
+  //   });
+  // };
+
   if (!auth.isInitiallyLoaded) {
     return <div></div>;
   }
@@ -74,6 +88,7 @@ const AppRouter = () => {
           {!auth.token && <Login />}
         </Route> */}
         <PrivateRoute path="/">
+          {/* <Home userName={currentUserName} /> */}
           <Home />
         </PrivateRoute>
         {/* <PrivateRoute path="/admin">

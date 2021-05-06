@@ -60,10 +60,10 @@ const PetProfile = (props) => {
 
   const loadSavedStatus = async () => {
     try {
-      getSaveStatus(id, currentUserId, auth.token).then((data) => {
+      getSaveStatus(id, auth.token).then((data) => {
         console.log(data.savedStatus.length);
         if (data.savedStatus.length > 0) setIsOnUserSaveList(true);
-        if ((data.savedStatus.length = 0)) setIsOnUserSaveList(false);
+        if (data.savedStatus.length === 0) setIsOnUserSaveList(false);
         // setPet(data);
       });
     } catch (error) {
@@ -79,8 +79,9 @@ const PetProfile = (props) => {
   //   find current petID in array petsOfCurrentUser; do through SQL
   // };
 
-  const petAdoption = async (petId, userId, status) => {
-    const adoptionUpdate = { userId: userId, status: status };
+  const petAdoption = async (petId, status) => {
+    console.log(status);
+    const adoptionUpdate = { status: status };
     // console.log('pet' + petId + 'user' + userId + 'type' + typeOfCare);
     try {
       const adoptedPet = await adoptPet(petId, adoptionUpdate, auth.token);
@@ -94,11 +95,12 @@ const PetProfile = (props) => {
     }
   };
 
-  const addToSaveList = async (petId, userId) => {
+  const addToSaveList = async (petId) => {
     try {
-      const savedPet = await savePet(petId, userId, auth.token);
+      const savedPet = await savePet(petId, auth.token);
       console.log(savedPet);
       loadPetById();
+      loadSavedStatus();
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -106,11 +108,12 @@ const PetProfile = (props) => {
     }
   };
 
-  const removeFromSaveList = async (petId, userId) => {
+  const removeFromSaveList = async (petId) => {
     try {
-      const removedPet = await removePet(petId, userId, auth.token);
+      const removedPet = await removePet(petId, auth.token);
       console.log(removedPet);
       loadPetById();
+      loadSavedStatus();
     } catch (error) {
       setErrorMessage(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
@@ -160,23 +163,21 @@ const PetProfile = (props) => {
               {pet.status === 'Available' && (
                 <button
                   className="btn btn-primary float-end ms-2"
-                  onClick={() => petAdoption(pet.id, currentUserId, 'Adopted')}>
+                  onClick={() => petAdoption(pet.id, 'Adopted')}>
                   Adopt {pet.name}
                 </button>
               )}
               {pet.status === 'Available' && (
                 <button
                   className="btn btn-primary float-end ms-2"
-                  onClick={() =>
-                    petAdoption(pet.id, currentUserId, 'Fostered')
-                  }>
+                  onClick={() => petAdoption(pet.id, 'Fostered')}>
                   Foster {pet.name}
                 </button>
               )}
               {pet.status !== 'Available' && (
                 <button
                   className="btn btn-primary float-end ms-2"
-                  onClick={() => petAdoption(pet.id, 'Available', 'Available')}>
+                  onClick={() => petAdoption(pet.id, 'Available')}>
                   Return {pet.name}
                 </button>
               )}

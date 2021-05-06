@@ -4,11 +4,12 @@ import localforage from 'localforage';
 export const AuthContext = createContext({
   isInitiallyLoaded: false,
   token: '',
-  // userId: '',
+  userId: '',
   admin: false,
   saveToken: async (token) => {},
   removeToken: async () => {},
-  // saveUserId: async (token) => {},
+  saveUserId: async (token) => {},
+  removeUserId: async () => {},
   saveAdminStatus: async (admin) => {},
   resetAdminStatus: async () => {},
 });
@@ -31,15 +32,20 @@ const AuthProvider = (props) => {
     setToken(token);
     await localforage.setItem(tokenKey, token);
   };
+
   const removeToken = async () => {
     setToken();
     await localforage.removeItem(tokenKey);
   };
 
-  // const saveUserId = async (userId) => {
-  //   setUserId(userId);
-  //   await localforage.setItem(userKey, userId);
-  // };
+  const saveUserId = async (userId) => {
+    setUserId(userId);
+    await localforage.setItem(userKey, userId);
+  };
+  const removeUserId = async () => {
+    setUserId();
+    await localforage.removeItem(userKey);
+  };
 
   const saveAdminStatus = async (admin) => {
     setAdmin(admin);
@@ -51,13 +57,7 @@ const AuthProvider = (props) => {
   };
 
   useEffect(() => {
-    // localforage.getItem(userKey).then((userId) => {
-    //   if (userId) {
-    //     setUserId(userId);
-    //   }
-    // });
-
-    localforage.getItem(adminKey).then((userId) => {
+    localforage.getItem(userKey).then((userId) => {
       if (userId) {
         setUserId(userId);
       }
@@ -80,12 +80,13 @@ const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         token,
-        // userId,
+        userId,
         admin,
         isInitiallyLoaded,
         saveToken,
         removeToken,
-        // saveUserId,
+        saveUserId,
+        removeUserId,
         saveAdminStatus,
         resetAdminStatus,
       }}>
