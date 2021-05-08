@@ -12,112 +12,77 @@ import { useAuth } from '../context/auth';
 
 const PetProfile = (props) => {
   const { currentUserId } = props;
-  console.log(props);
-  // We can use the `useParams` hook here to access
-  // the dynamic pieces of the URL.
   let { id } = useParams();
   const auth = useAuth();
   const [pet, setPet] = useState({});
   const [isOnUserSaveList, setIsOnUserSaveList] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [userId, setUserId] = useState(currentUserId);
+  const [petPicURL, setPetPicURL] = useState(pet.picture_url);
 
   const isMounted = useRef(false);
 
-  // let pet = pets.filter((x) => x.id === +id)[0];
-
   useEffect(() => {
     isMounted.current = true;
-    console.log(userId);
-    console.log(currentUserId);
-    console.log(id);
-    loadPetById().then(loadSavedStatus());
+    loadPetById();
+    loadSavedStatus();
+
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  useEffect(() => {
-    if (errorMessage) alert(errorMessage);
-  }, [errorMessage]);
-
-  useEffect(() => {
-    if (!userId) setUserId(currentUserId);
-    console.log(userId);
-  }, [currentUserId]);
-
   const loadPetById = async () => {
     try {
       getPetById(id, auth.token).then((data) => {
         setPet(data);
+        if (!data.picture_url) {
+          if (data.type === 'dog') setPetPicURL('../dog.png');
+          if (data.type === 'cat') setPetPicURL('../cat.png');
+        }
       });
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
   const loadSavedStatus = async () => {
     try {
       getSaveStatus(id, auth.userId, auth.token).then((data) => {
-        console.log(data.savedStatus.length);
         if (data.savedStatus.length > 0) setIsOnUserSaveList(true);
         if (data.savedStatus.length === 0) setIsOnUserSaveList(false);
-        // setPet(data);
       });
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
-  // const petsOfCurrentUser = pets.filter((x) => x.ownerID === currentUser.id);
-
-  // const isCurrentUserOwner = () => {
-  //   find current petID in array petsOfCurrentUser; do through SQL
-  // };
-
   const petAdoption = async (petId, status) => {
-    console.log(status);
     const adoptionUpdate = { status: status };
-    // console.log('pet' + petId + 'user' + userId + 'type' + typeOfCare);
     try {
       const adoptedPet = await adoptPet(petId, adoptionUpdate, auth.token);
-      console.log(adoptedPet);
       loadPetById();
       loadSavedStatus();
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
   const addToSaveList = async (petId) => {
     try {
       const savedPet = await savePet(petId, auth.token);
-      console.log(savedPet);
       loadPetById();
       loadSavedStatus();
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
   const removeFromSaveList = async (petId) => {
     try {
       const removedPet = await removePet(petId, auth.token);
-      console.log(removedPet);
       loadPetById();
       loadSavedStatus();
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
@@ -127,7 +92,7 @@ const PetProfile = (props) => {
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src={pet.picture_url}
+              src={petPicURL}
               alt="..."
               className="img-fluid"
               style={{ height: '15rem', width: '30rem', objectFit: 'contain' }}

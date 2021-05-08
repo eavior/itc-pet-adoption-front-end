@@ -1,24 +1,6 @@
-// import logo from './logo.svg';
 import './App.css';
 import Home from './components/Home';
 import HomeLoggedOut from './components/HomeLoggedOut';
-import { useState, useEffect } from 'react';
-// import { useEffect, useState, useRef } from 'react';
-
-// function App() {
-//   const [auth] = useState(false);
-//   const [userID] = useState(3);
-
-//   if (auth) {
-//     return <Home userID={userID} />;
-//   }
-
-//   if (!auth) {
-//     return <HomeLoggedOut />;
-//   }
-// }
-
-// export default App;
 
 import {
   BrowserRouter as Router,
@@ -52,9 +34,6 @@ function PrivateRoute({ children, ...rest }) {
 
 const AppRouter = () => {
   let auth = useAuth();
-  console.log(auth.userId);
-  console.log(auth.fullName);
-
   if (!auth.isInitiallyLoaded) {
     return <div></div>;
   }
@@ -63,7 +42,6 @@ const AppRouter = () => {
       <Switch>
         <Route path="/unknown_user">
           {auth.token && <Redirect to="/" />}
-          {/* {auth.token && <Home />} */}
           {!auth.token && <HomeLoggedOut />}
         </Route>
         <PrivateRoute path="/">

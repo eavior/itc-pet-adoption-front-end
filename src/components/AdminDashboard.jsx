@@ -11,7 +11,6 @@ const AdminDashboard = () => {
   const [petList, setPetList] = useState([]);
   const [userList, setUserList] = useState([]);
   const isMounted = useRef(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
@@ -39,10 +38,6 @@ const AdminDashboard = () => {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   if (errorMessage) alert(errorMessage);
-  // }, [errorMessage]);
 
   return (
     <>

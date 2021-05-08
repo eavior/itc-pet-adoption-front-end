@@ -3,7 +3,6 @@ import PetItem from './PetItem';
 
 const PetListResult = (props) => {
   const { petList } = props;
-  // const { ownedPets, onRefresh } = props;
 
   const petListGallery = (
     <div className="row row-cols-1 row-cols-md-auto g-4">

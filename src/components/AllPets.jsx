@@ -3,7 +3,6 @@ import PetItem from './PetItem';
 
 const AllPets = (props) => {
   const { petList, currentUserId } = props;
-  console.log(petList);
   const allPets =
     petList.length < 1 ? (
       <div>There are no pets in the list</div>

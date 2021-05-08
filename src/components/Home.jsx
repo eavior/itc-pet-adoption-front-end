@@ -25,10 +25,6 @@ const NavBar = () => {
   return (
     <nav className="container navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div className="container-fluid">
-        {/* <a className="navbar-brand" href="#">Navbar</a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button> */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
@@ -91,96 +87,29 @@ const NavBar = () => {
               </NavLink>
             </li>
           </ul>
-          <form className="d-flex">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
         </div>
       </div>
     </nav>
   );
 };
 
-const Home = (props) => {
-  //   const {authUser} = props;
-  // const auth = useAuth();
-  const [users] = useState(mockDB.users);
-  const [pets, setPets] = useState('');
+const Home = () => {
   const [petList, setPetList] = useState([]);
   const [greeting] = useState('Hello');
-  const [errorMessage, setErrorMessage] = useState('');
-  const { userName } = props;
-  // const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
-
   const auth = useAuth();
-  const [currentUserName, setCurrentUserName] = useState('');
-  const [currentUserId, setCurrentUserId] = useState('');
-  const [currentUserData, setCurrentUserData] = useState('');
-  const [ownedPets, setOwnedPets] = useState({});
-  const [savedPets, setSavedPets] = useState({});
 
   useEffect(() => {
-    console.log('loading home');
-    loadUser();
     loadPets();
-    // loadOwnedPets();
-    // loadSavedPets();
   }, []);
-  //  }, [auth.token]);
-
-  const loadUser = () => {
-    // getCurrentUser(auth.userId, auth.token).then((data) => {
-    //   setCurrentUserName(`${data.first_name} ${data.last_name}`);
-    //   setCurrentUserId(data.id);
-    //   setCurrentUserData(data);
-    // });
-  };
 
   const loadPets = async () => {
     try {
-      console.log(auth.userId);
       const pets = await getAllPets(auth.token);
-      console.log(pets);
       setPetList(pets);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
-  useEffect(() => {
-    if (errorMessage) alert(errorMessage);
-  }, [errorMessage]);
-
-  // const adopted = currentUser[0].
-  // useEffect(() => {
-  //   getPets()
-  //     .then(pets => {
-  //       setPets(pets);
-  //     });
-  // }, []);
-
-  // const handleOnNewPet = (newPet) => {
-  //   setPets((prevPets) => [...prevPets, newPet]);
-  // };
-  // const handleOnDeleteItem = (itemIndex) => {
-  //   setPets((prevPets) => {
-  //     const left = prevPets.slice(0, itemIndex);
-  //     const right = prevPets.slice(itemIndex + 1);
-  //     return [...left, ...right];
-  //   });
-  // };
-
-  // const animal = users.users.filter((x) => x.id == 2);
-
   return (
-    // <MyContext.Provider value={{ error, currentUser, onAddTweet }}>
     <Router>
       <NavBar />
       <div className="container" style={{ marginTop: '5rem' }}>
@@ -217,63 +146,36 @@ const Home = (props) => {
             </ul>
           </Route>
           <Route path="/my_pets">
-            <MyPets
-            // currentUserId={currentUserId}
-            // ownedPets={ownedPets}
-            // savedPets={savedPets}
-            />
+            <MyPets />
           </Route>
-
-          {/* <Route path="/pets/:id">
-            <PetProfile pets={pets.pets} onDeleteItem={handleOnDeleteItem} />
-          </Route> */}
-
           <Route path="/all_pets">
-            <AllPets currentUserId={currentUserId} petList={petList} />
+            <AllPets petList={petList} />
           </Route>
 
           <Route path="/pets/edit/:id">
-            <AdminEditPet currentUserId={currentUserId} />
+            <AdminEditPet />
           </Route>
 
           <Route path="/pets/:id">
-            <PetProfile currentUserId={currentUserId} />
+            <PetProfile />
           </Route>
 
           <Route path="/profile">
-            <UserProfile
-              currentUserId={currentUserId}
-              currentUserData={currentUserData}
-            />
-            {/* <Profile currentUser={authUser.uid}></Profile> */}
+            <UserProfile />
           </Route>
 
-          <Route path="/admin">
-            {auth.admin && (
-              // <AdminDashboard currentUserId={auth.UserId} petList={petList} />
-              <AdminDashboard />
-            )}
-            {/* <Profile currentUser={authUser.uid}></Profile> */}
-          </Route>
-
-          {/* <Route path="/add_pet">
-            <AddPet />
-
-          </Route> */}
+          <Route path="/admin">{auth.admin && <AdminDashboard />}</Route>
 
           <Route path="/search">
             <Search />
-            {/* <SignOut /> */}
           </Route>
 
           <Route path="/sign_out">
             <SignOut />
-            {/* <SignOut /> */}
           </Route>
         </Switch>
       </div>
     </Router>
-    // </MyContext.Provider>
   );
 };
 

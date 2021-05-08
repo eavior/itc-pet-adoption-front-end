@@ -106,7 +106,6 @@ export async function savePet(petId, token) {
     petId,
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -116,7 +115,6 @@ export async function removePet(petId, token) {
     `${BaseUrl}/pet/${petId}/save`,
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -126,7 +124,6 @@ export async function getOwnedPets(userId, token) {
     BaseUrl + '/pet/user/' + userId + '/owned',
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -178,15 +175,12 @@ export async function getAllPetsForUser(userId, token) {
 
 // 17 ok (all pets + admin)
 export async function getAllPets(token) {
-  console.log(token);
   const response = await axios.get(BaseUrl + '/pet/all', getAuthConfig(token));
-  console.log(response.data);
   return response.data.pets;
 }
 
 // 18
 export async function deletePet(petId, token) {
-  console.log(petId);
   const response = await axios.delete(
     `${BaseUrl}/pet/` + petId,
     getAuthConfig(token)
@@ -201,7 +195,6 @@ export async function getSaveStatus(petId, userId, token) {
     `${BaseUrl}/pet/${petId}/user/${userId}/`,
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -217,7 +210,6 @@ export async function updateUserRole(userId, updatedUser, token) {
 
 // 21
 export async function deleteUser(userId, token) {
-  console.log(userId);
   const response = await axios.delete(
     `${BaseUrl}/user/` + userId,
     getAuthConfig(token)

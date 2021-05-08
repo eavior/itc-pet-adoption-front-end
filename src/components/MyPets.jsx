@@ -24,7 +24,6 @@ const MyPets = () => {
     try {
       const pets = await getOwnedPets(auth.userId, auth.token);
       setOwnedPets(pets.owned);
-      console.log(pets);
     } catch (error) {
       console.log(error);
     }

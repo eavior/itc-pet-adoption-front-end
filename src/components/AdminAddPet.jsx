@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createPet, createImage } from '../lib/api';
 import { useAuth } from '../context/auth';
@@ -8,12 +8,8 @@ import FormData from 'form-data';
 const AddPet = (props) => {
   const { onLoadPets } = props;
   const auth = useAuth();
-  // const { item } = props;
-  // const [displayName, setdisplayName] = useState(null);
-  const [pet, setPet] = useState(null);
+  const [setPet] = useState(null);
   const [petPicURL, setPetPicURL] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  // const isMounted = useRef(false);
 
   const {
     register,
@@ -24,9 +20,7 @@ const AddPet = (props) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
-      console.log(data);
       const createdPet = await createPet(data, auth.token);
       setPet(createdPet.pet);
       onLoadPets();
@@ -34,61 +28,41 @@ const AddPet = (props) => {
       setPetPicURL('');
       reset();
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
   const onSubmitPicture = async (data) => {
-    console.log(data);
-    console.log(data.image[0]);
     const file = data.image[0];
-
     let formData = new FormData();
     formData.append('image', file, file.name);
     try {
       const imageUrl = await createImage(formData, auth.token);
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
-      console.log(imageUrl.picture_url);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (errorMessage) alert(errorMessage);
-  }, [errorMessage]);
-
-  useEffect(() => {
-    // if (!isAddMode) {
-    // get user and set form fields
-
-    console.log('do something');
-
-    // }
-  }, []);
 
   return (
     <>
       <form className="row g-3" onSubmit={handleSubmit(onSubmit)}>
-        <div className="col-md-4">
-          {/* <label className="form-label">Biography</label> */}
-          <img
-            src={petPicURL}
-            alt="..."
-            className="img-fluid rounded"
-            style={{
-              height: '15rem',
-              width: '30rem',
-              objectFit: 'contain',
-              border: 'solid 1px #ccc',
-            }}
-          />
-        </div>
+        {petPicURL && (
+          <div className="col-md-4">
+            <img
+              src={petPicURL}
+              alt="..."
+              className="img-fluid rounded"
+              style={{
+                height: '15rem',
+                width: '30rem',
+                objectFit: 'contain',
+                border: 'solid 1px #ccc',
+              }}
+            />
+          </div>
+        )}
 
         <div className="col-8">
           <div className="row">
@@ -97,7 +71,6 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                // defaultValue={petName}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Pet name"
                 {...register('name', {
@@ -121,12 +94,10 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                // defaultValue={petBreed}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Breed"
                 {...register('breed', {
                   required: false,
-                  // min: 1,
                   maxLength: 100,
                 })}
               />
@@ -137,19 +108,17 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                // defaultValue={petColor}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Color"
                 {...register('color', {
                   required: false,
-                  // minLength: 1,
                   maxLength: 100,
                 })}
               />
             </div>
 
             <div className="col-6 mb-3">
-              <label className="form-label">Height</label>
+              <label className="form-label">Height (cm)</label>
               <input
                 className="form-control"
                 type="number"
@@ -160,13 +129,12 @@ const AddPet = (props) => {
                   required: false,
                   min: 0,
                   max: 999,
-                  // pattern: /^\S+@\S+$/i,
                 })}
               />
             </div>
 
             <div className="col-6 mb-3">
-              <label className="form-label">Weight</label>
+              <label className="form-label">Weight (gram)</label>
               <input
                 className="form-control"
                 type="number"
@@ -203,7 +171,6 @@ const AddPet = (props) => {
               type="button"
               id="inputGroupFileAddon04"
               onClick={handleSubmit(onSubmitPicture)}>
-              {/* onClick={(data) => await onSubmitPicture(data)}> */}
               Upload
             </button>
           </div>
@@ -213,18 +180,15 @@ const AddPet = (props) => {
           <div className="row">
             <div className="col-3 mb-3">
               <input
-                // className="form-control"
                 type="checkbox"
-                // defaultValue={petHypoallergenic}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Hypoallergenic"
                 {...register('hypoallergenic', {
                   required: false,
-                  // minLength: 1,
                   maxLength: 100,
                 })}
               />
-              <label className="form-label"> Hypoallergenic</label>
+              <label className="form-label">&nbsp;Hypoallergenic</label>
             </div>
 
             <div className="col-9 mb-3">
@@ -232,12 +196,10 @@ const AddPet = (props) => {
               <input
                 className="form-control"
                 type="text"
-                // defaultValue={petDiet}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Dietary restrictions"
                 {...register('diet', {
                   required: false,
-                  // minLength: 1,
                   maxLength: 100,
                 })}
               />
@@ -251,12 +213,10 @@ const AddPet = (props) => {
             <input
               className="form-control"
               type="text"
-              // defaultValue={petPicURL}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Picture url"
               {...register('picture_url', {
                 required: false,
-                // minLength: 1,
                 maxLength: 100,
               })}
             />
@@ -269,7 +229,6 @@ const AddPet = (props) => {
               <label className="form-label">Biography</label>
               <textarea
                 className="form-control"
-                // defaultValue={petBio}
                 onChange={(e) => setValue(e.target.value)}
                 style={{ height: '7rem' }}
                 {...register('bio', { required: false, min: 1 })}

@@ -39,7 +39,6 @@ const UserProfile = (props) => {
       const fields = [
         'id',
         'bio',
-        // 'email',
         'first_name',
         'last_name',
         'phone_number',
@@ -52,7 +51,7 @@ const UserProfile = (props) => {
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'red';
+    document.body.style.backgroundColor = 'white';
   }, []);
 
   return (
@@ -178,20 +177,6 @@ const UserProfile = (props) => {
           <button type="submit" className="btn btn-primary float-end ms-4">
             Save your changes
           </button>
-
-          <input className="btn btn-primary float-end" type="submit" />
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="gridCheck"></input>
-            <label
-              className="form-check-label"
-              // for="gridCheck"
-            >
-              Agree to the user terms
-            </label>
-          </div>
         </div>
       </form>
     </>

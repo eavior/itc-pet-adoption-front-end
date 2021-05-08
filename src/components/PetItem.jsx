@@ -1,42 +1,30 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  NavLink,
-} from 'react-router-dom';
-// import { useState, useRef } from 'react';
+import { BrowserRouter as Router, NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const PetItem = (props) => {
-  const { item, currentUserId } = props;
-  // const { item } = props;
+  const { item } = props;
+  const [petPicURL, setPetPicURL] = useState(item.picture_url);
 
-  // const isMounted = useRef(false);
-
-  // useEffect(() => {
-  //   isMounted.current = true;
-
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (!item.picture_url) {
+      if (item.type === 'dog') setPetPicURL('../dog.png');
+      if (item.type === 'cat') setPetPicURL('../cat.png');
+    }
+  }, []);
 
   return (
     <>
       <div className="col">
-        <div className="card" style={{ width: '12rem', height: '20rem' }}>
+        <div className="card" style={{ width: '12rem', height: '15rem' }}>
           <img
-            src={item.picture_url}
+            src={petPicURL}
             className="card-img-top"
             alt={item.name}
             style={{ height: '6rem', objectFit: 'cover' }}
           />
           <div className="card-body">
-            <h5 className="card-title">{item.name}</h5>
-            <p className="card-text">{item.status}</p>
-            {/* <a href={`/pets/${item.id}`} className="btn btn-primary">
-              See more
-            </a> */}
+            <h5 className="card-title text-center">{item.name}</h5>
             <NavLink
               className="nav-link btn btn-primary"
               activeClassName="selected"
@@ -44,8 +32,8 @@ const PetItem = (props) => {
               See more
             </NavLink>
           </div>
-          <div className="card-footer">
-            <small className="text-muted">Last updated 3 mins ago</small>
+          <div className="card-footer text-center">
+            <small className="text-muted">{item.status}</small>
           </div>
         </div>
       </div>
