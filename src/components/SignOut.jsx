@@ -10,6 +10,7 @@ const SignOut = () => {
     isMounted.current = true;
     auth.resetAdminStatus();
     auth.removeUserId();
+    auth.removeFullName();
     auth.removeToken();
 
     return () => {

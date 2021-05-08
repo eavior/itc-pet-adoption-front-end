@@ -1,12 +1,10 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { login } from '../lib/api';
 import { useAuth } from '../context/auth';
 
 export default function Login() {
   const auth = useAuth();
-  const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -18,20 +16,14 @@ export default function Login() {
       const { token, user } = await login(data);
       await auth.saveToken(token);
       await auth.saveUserId(user.id);
+      await auth.saveFullName(user.fullName);
       if (user.role === 'admin') await auth.saveAdminStatus(true);
       else await auth.saveAdminStatus(false);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
+      alert(`${error.response.data.message} (status ${error.response.status})`);
     }
   };
-
-  console.log(errorMessage);
-
-  useEffect(() => {
-    if (errorMessage !== '') alert('errer' + errorMessage);
-  }, [errorMessage]);
 
   return (
     <>
@@ -65,10 +57,6 @@ export default function Login() {
         </div>
 
         <div className="col-12 mb-4">
-          <button type="submit" className="btn btn-primary float-end ms-4">
-            Sign in
-          </button>
-
           <input className="btn btn-primary float-end" type="submit" />
         </div>
       </form>

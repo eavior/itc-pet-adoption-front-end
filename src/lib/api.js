@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BaseUrl = 'http://127.0.0.1:5500';
+// const BaseUrl = 'http://127.0.0.1:5500';
+const BaseUrl = 'https://eavior-pet-adoption.herokuapp.com';
 
 function getAuthConfig(token) {
   return {
@@ -89,13 +90,12 @@ export async function searchPets(query, token) {
 // 8 Adopt/Foster API - Route ‘/pet/:id/adopt’ [POST] (protected to logged in users)
 // Return Pet API - Route ‘/pet/:id/return’ [POST] (protected to logged in users)
 export async function adoptPet(petId, adoptionUpdate, token) {
-  console.log(petId);
+  const status = adoptionUpdate.status === 'Available' ? '/return' : '/adopt';
   const response = await axios.put(
-    `${BaseUrl}/pet/` + petId + `/status`,
+    `${BaseUrl}/pet/` + petId + status,
     adoptionUpdate,
     getAuthConfig(token)
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -113,7 +113,7 @@ export async function savePet(petId, token) {
 // 10 Delete Saved Pet API - Route ‘/pet/:id/save’ [DELETE] (protected to logged in users)
 export async function removePet(petId, token) {
   const response = await axios.delete(
-    `${BaseUrl}/pet/${petId}/remove`,
+    `${BaseUrl}/pet/${petId}/save`,
     getAuthConfig(token)
   );
   console.log(response.data);
@@ -126,6 +126,7 @@ export async function getOwnedPets(userId, token) {
     BaseUrl + '/pet/user/' + userId + '/owned',
     getAuthConfig(token)
   );
+  console.log(response.data);
   return response.data;
 }
 
@@ -160,7 +161,7 @@ export async function updateCurrentUser(userId, updatedUser, token) {
 
 // 15 Get Users API - Route ‘/user’ [GET] (protected to admin)
 export async function getUsers(token) {
-  const response = await axios.get(`${BaseUrl}/user/`, getAuthConfig(token));
+  const response = await axios.get(`${BaseUrl}/user`, getAuthConfig(token));
   return response.data;
 }
 
@@ -194,16 +195,32 @@ export async function deletePet(petId, token) {
 }
 
 // 19
-export async function getSaveStatus(petId, token) {
+export async function getSaveStatus(petId, userId, token) {
   const response = await axios.get(
-    `${BaseUrl}/pet/save/${petId}/current_user/`,
+    // `${BaseUrl}/pet/save/${petId}/current_user/`,
+    `${BaseUrl}/pet/${petId}/user/${userId}/`,
     getAuthConfig(token)
   );
   console.log(response.data);
   return response.data;
 }
 
-// export async function getPets(id, token) {
-//   const response = await axios.get(`${BaseUrl}/pet`, getAuthConfig(token));
-//   return response.data;
-// }
+// 20 Update User API - for admins only
+export async function updateUserRole(userId, updatedUser, token) {
+  const response = await axios.put(
+    `${BaseUrl}/user/${userId}/admin`,
+    updatedUser,
+    getAuthConfig(token)
+  );
+  return response.data;
+}
+
+// 21
+export async function deleteUser(userId, token) {
+  console.log(userId);
+  const response = await axios.delete(
+    `${BaseUrl}/user/` + userId,
+    getAuthConfig(token)
+  );
+  return response.data;
+}

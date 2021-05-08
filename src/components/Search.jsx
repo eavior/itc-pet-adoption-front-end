@@ -1,24 +1,8 @@
-// import React from 'react';
-// import { Form, Input, Select } from './Components';
-
-// export default function Search() {
-//   const onSubmit = (data) => console.log(data);
-
-//   return (
-//     <Form onSubmit={onSubmit}>
-//       <Input name="firstName" />
-//       <Input name="lastName" />
-//       <Select name="gender" options={['female', 'male', 'other']} />
-
-//       <Input type="submit" value="Submit" />
-//     </Form>
-//   );
-// }
-
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/auth';
 import { searchPets } from '../lib/api';
+import PetListResult from './PetListResult';
 
 const Search = (props) => {
   const auth = useAuth();
@@ -28,18 +12,7 @@ const Search = (props) => {
   const [searchByHeight, setSearchByHeight] = useState('');
   const [searchByWeight, setSearchByWeight] = useState('');
   const [searchResult, setSearchResult] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  // const { item } = props;
-
-  // const isMounted = useRef(false);
-
-  // useEffect(() => {
-  //   isMounted.current = true;
-
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, []);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -48,12 +21,11 @@ const Search = (props) => {
     try {
       console.log(searchQuery);
       const search = await searchPets(searchQuery, auth.token);
-      setSearchResult(search);
-      console.log(search);
+      setSearchPerformed(true);
+      setSearchResult(search.searchResult);
+      console.log(search.searchResult);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
@@ -103,7 +75,6 @@ const Search = (props) => {
         page
       </div>
       <div>Advanced search: Adoption Status, Height, Weight, Type, Name</div> */}
-
       <form onSubmit={(event) => onSubmit(event)}>
         <div className="row mb-3">
           <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">
@@ -192,6 +163,14 @@ const Search = (props) => {
           Search
         </button>
       </form>
+      <br></br>
+      {searchResult.length !== 0 && searchPerformed && (
+        <PetListResult petList={searchResult} />
+      )}
+      {searchResult.length == 0 && !searchPerformed && <div></div>}
+      {searchResult.length == 0 && searchPerformed && (
+        <div>Sorry, no pets with the entered criteria were found.</div>
+      )}
     </>
   );
 };

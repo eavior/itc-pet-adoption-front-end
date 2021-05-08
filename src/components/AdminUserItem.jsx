@@ -1,93 +1,105 @@
 import React from 'react';
-// import { useEffect, useState, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
+import Modal from 'react-modal';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/auth';
-import { getAllPetsForUser } from '../lib/api';
+import { getOwnedPets } from '../lib/api';
+import MyOwnedPetsList from './MyOwnedPetsList';
 
 const AdminUserItem = (props) => {
   const auth = useAuth();
-  const { item, index } = props;
-  const [petList, setPetList] = useState([]);
-  console.log(item.id);
+  const { item } = props;
+  const [ownedPets, setOwnedPets] = useState({});
   const isMounted = useRef(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     isMounted.current = true;
-    loadPetsForUser();
+    loadOwnedPets();
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  const loadPetsForUser = async () => {
+  const loadOwnedPets = async () => {
     try {
-      const pets = await getAllPetsForUser(item.id, auth.token);
-      console.log(pets);
-      setPetList(pets);
-    } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
-    }
+      const pets = await getOwnedPets(item.id, auth.token);
+      setOwnedPets(pets.owned);
+    } catch (error) {}
+  };
+
+  const modalStyle = {
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(224, 224, 224, 0.75)',
+      backdropFilter: 'blur(5px)',
+    },
+    content: {
+      position: 'absolute',
+      top: '80px',
+      left: '20%',
+      right: '20%',
+      bottom: '20px',
+      border: '1px solid #ccc',
+      background: '#fff',
+      backdropFilter: 'blur(5px)',
+      overflow: 'auto',
+      WebkitOverflowScrolling: 'touch',
+      borderRadius: '4px',
+      outline: 'none',
+      padding: '20px',
+    },
   };
 
   return (
     <>
-      <p className="mb-0 mt-3">
-        <a
-          className="btn btn-primary mb-0"
-          data-toggle="collapse"
-          href={`#collapseExample${index}`}
-          role="button"
-          aria-expanded="false"
-          aria-controls={`collapseExample${index}`}>
-          {item.first_name} {item.last_name} {item.admin && '(administrator)'}
-        </a>
-        {/* <button className="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Button with data-target
-  </button> */}
-      </p>
-      <div className="collapse mt-0" id={`collapseExample${index}`}>
-        <div className="card card-body">
-          <span>
-            {item.first_name} {item.last_name} {item.admin && '(administrator)'}
-          </span>
-          <span>
-            Clicking on a user should display all the pets that the user owns
-            along with all of their profile details so the administrators can
-            contact the user.
-          </span>
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        className="list-group-item list-group-item-action btn btn-outline-info shadow-sm p-1 ms-3 mb-0 w-75 bg-body border rounded">
+        {item.first_name} {item.last_name}{' '}
+        {item.role === 'admin' && (
+          <span className="fw-bold">(administrator)</span>
+        )}
+      </button>
+      <Modal
+        closeTimeoutMS={200}
+        isOpen={showModal}
+        contentLabel="modal"
+        style={modalStyle}
+        onRequestClose={() => setShowModal(false)}
+        ariaHideApp={false}>
+        <button
+          type="button"
+          className="btn-close float-end"
+          aria-label="Close"
+          onClick={() => setShowModal(false)}></button>
+        <div>
+          {item.first_name} {item.last_name} | Phone number: {item.phone_number}{' '}
+          | Email: {item.email}{' '}
         </div>
-      </div>
+        <br></br>
 
-      {/* <div className="card">
-          <div className="card-header" id={`heading${index}`}>
-            <h5 className="mb-0">
-              <button
-                className="btn btn-link"
-                type="button"
-                data-toggle="collapse"
-                data-target={`#collapse${index}`}
-                aria-expanded="false"
-                aria-controls={`heading${index}`}>
-                {item.first_name} {item.last_name} {item.admin && '(administrator)'}
-              </button>
-            </h5>
+        <div className="card">
+          <div className="card-body">
+            {ownedPets.length > 0 && (
+              <MyOwnedPetsList
+                ownedPets={ownedPets}
+                onCloseModal={() => setShowModal(false)}
+              />
+            )}
+            {ownedPets.length === 0 && (
+              <div>
+                {item.first_name} {item.last_name} doesn't have any adopted or
+                fostered pet.
+              </div>
+            )}
           </div>
-          <div
-            id={`collapse${index}`}
-            className="collapse"
-            aria-labelledby={`heading${index}`}
-            data-parent="#accordionExample">
-            <div className="card-body">
-              Clicking on a user should display all the pets that the user owns along with all of their profile details so the administrators can contact the user. 
-            </div>
-          </div>
-        </div> */}
+        </div>
+      </Modal>
     </>
   );
 };

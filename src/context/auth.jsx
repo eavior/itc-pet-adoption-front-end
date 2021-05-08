@@ -5,17 +5,21 @@ export const AuthContext = createContext({
   isInitiallyLoaded: false,
   token: '',
   userId: '',
+  fullName: '',
   admin: false,
   saveToken: async (token) => {},
   removeToken: async () => {},
   saveUserId: async (token) => {},
   removeUserId: async () => {},
+  saveFullName: async (token) => {},
+  removeFullName: async () => {},
   saveAdminStatus: async (admin) => {},
   resetAdminStatus: async () => {},
 });
 
 const tokenKey = 'userToken';
 const userKey = 'userId';
+const nameKey = 'fullName';
 const adminKey = 'adminRole';
 
 export const useAuth = () => {
@@ -26,6 +30,7 @@ const AuthProvider = (props) => {
   const [isInitiallyLoaded, setIsInitiallyLoaded] = useState(false);
   const [token, setToken] = useState();
   const [userId, setUserId] = useState();
+  const [fullName, setFullName] = useState();
   const [admin, setAdmin] = useState();
 
   const saveToken = async (token) => {
@@ -42,9 +47,20 @@ const AuthProvider = (props) => {
     setUserId(userId);
     await localforage.setItem(userKey, userId);
   };
+
   const removeUserId = async () => {
     setUserId();
     await localforage.removeItem(userKey);
+  };
+
+  const saveFullName = async (fullName) => {
+    setFullName(fullName);
+    await localforage.setItem(nameKey, fullName);
+  };
+
+  const removeFullName = async () => {
+    setFullName();
+    await localforage.removeItem(nameKey);
   };
 
   const saveAdminStatus = async (admin) => {
@@ -60,6 +76,12 @@ const AuthProvider = (props) => {
     localforage.getItem(userKey).then((userId) => {
       if (userId) {
         setUserId(userId);
+      }
+    });
+
+    localforage.getItem(nameKey).then((fullName) => {
+      if (fullName) {
+        setFullName(fullName);
       }
     });
 
@@ -81,12 +103,15 @@ const AuthProvider = (props) => {
       value={{
         token,
         userId,
+        fullName,
         admin,
         isInitiallyLoaded,
         saveToken,
         removeToken,
         saveUserId,
         removeUserId,
+        saveFullName,
+        removeFullName,
         saveAdminStatus,
         resetAdminStatus,
       }}>

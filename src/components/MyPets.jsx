@@ -1,48 +1,52 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
-import AddPet from './AdminAddPet';
-import AdminUsersList from './AdminUserList';
-import { getAllPets, getUsers } from '../lib/api';
-import AdminPetList from './AdminPetList';
+import { getOwnedPets, getSavedPets } from '../lib/api';
 import { useAuth } from '../context/auth';
+import MyOwnedPetsList from './MyOwnedPetsList';
+import MySavedPetsList from './MySavedPetsList';
 
-const AdminDashboard = () => {
+const MyPets = () => {
   const auth = useAuth();
-  const [petList, setPetList] = useState([]);
-  const [userList, setUserList] = useState([]);
+  const [ownedPets, setOwnedPets] = useState({});
+  const [savedPets, setSavedPets] = useState({});
   const isMounted = useRef(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
-    loadPets();
-    loadUsers();
+    loadOwnedPets();
+    loadSavedPets();
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  const loadPets = async () => {
+  const loadOwnedPets = async () => {
     try {
-      const pets = await getAllPets(auth.token);
-      setPetList(pets);
+      const pets = await getOwnedPets(auth.userId, auth.token);
+      setOwnedPets(pets.owned);
+      console.log(pets);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const loadUsers = async () => {
+  const loadSavedPets = async () => {
     try {
-      const users = await getUsers(auth.token);
-      setUserList(users.user);
+      const pets = await getSavedPets(auth.userId, auth.token);
+      setSavedPets(pets.saved);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // useEffect(() => {
-  //   if (errorMessage) alert(errorMessage);
-  // }, [errorMessage]);
+  const refresh = async () => {
+    try {
+      loadOwnedPets();
+      loadSavedPets();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -57,7 +61,7 @@ const AdminDashboard = () => {
                 data-target="#collapseOne"
                 aria-expanded="false"
                 aria-controls="collapseOne">
-                User list
+                Adopted or fostered pets
               </button>
             </h5>
           </div>
@@ -68,7 +72,15 @@ const AdminDashboard = () => {
             aria-labelledby="headingOne"
             data-parent="#accordionExample">
             <div className="card-body">
-              <AdminUsersList userList={userList} />
+              {ownedPets.length > 0 && (
+                <MyOwnedPetsList
+                  ownedPets={ownedPets}
+                  onRefresh={() => refresh()}
+                />
+              )}
+              {ownedPets.length === 0 && (
+                <div>You do not own a pet yet. Please foster or adopt one.</div>
+              )}
             </div>
           </div>
         </div>
@@ -82,7 +94,7 @@ const AdminDashboard = () => {
                 data-target="#collapseTwo"
                 aria-expanded="false"
                 aria-controls="collapseTwo">
-                Pet List
+                Saved pets
               </button>
             </h5>
           </div>
@@ -92,31 +104,18 @@ const AdminDashboard = () => {
             aria-labelledby="headingTwo"
             data-parent="#accordionExample">
             <div className="card-body">
-              <AdminPetList petList={petList} onLoadPets={() => loadPets()} />
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="card-header" id="headingThree">
-            <h5 className="mb-0">
-              <button
-                className="btn btn-link collapsed"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseThree"
-                aria-expanded="false"
-                aria-controls="collapseThree">
-                Add a pet
-              </button>
-            </h5>
-          </div>
-          <div
-            id="collapseThree"
-            className="collapse"
-            aria-labelledby="headingThree"
-            data-parent="#accordionExample">
-            <div className="card-body">
-              <AddPet onLoadPets={() => loadPets()} />
+              {savedPets.length > 0 && (
+                <MySavedPetsList
+                  savedPets={savedPets}
+                  onRefresh={() => refresh()}
+                />
+              )}
+              {savedPets.length === 0 && (
+                <div>
+                  You haven't saved a pet yet. Go to the pet gallery or use the
+                  search function to find pets.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -125,4 +124,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default MyPets;

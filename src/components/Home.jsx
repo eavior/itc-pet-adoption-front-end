@@ -10,19 +10,13 @@ import { useState, useEffect } from 'react';
 import UserProfile from './UserProfile';
 
 import AdminDashboard from './AdminDashboard';
-import AddPet from './AdminAddPet';
 import SignOut from './SignOut';
-import MyPetsList from './MyPetsList';
+import MyPets from './MyPets';
 import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
 import Search from './Search';
 import { useAuth } from '../context/auth';
-import {
-  getAllPets,
-  getCurrentUser,
-  getOwnedPets,
-  getSavedPets,
-} from '../lib/api';
+import { getAllPets } from '../lib/api';
 import AllPets from './AllPets';
 import AdminEditPet from './AdminEditPet';
 
@@ -67,7 +61,7 @@ const NavBar = () => {
                 className="nav-link"
                 activeClassName="active"
                 to="/all_pets">
-                All pets
+                Pet gallery
               </NavLink>
             </li>
             <li className="nav-item">
@@ -120,7 +114,7 @@ const Home = (props) => {
   const [users] = useState(mockDB.users);
   const [pets, setPets] = useState('');
   const [petList, setPetList] = useState([]);
-  const [greeting] = useState('Good morning');
+  const [greeting] = useState('Hello');
   const [errorMessage, setErrorMessage] = useState('');
   const { userName } = props;
   // const currentUser = mockDB.users.filter((x) => x.id === userID)[0];
@@ -136,41 +130,17 @@ const Home = (props) => {
     console.log('loading home');
     loadUser();
     loadPets();
-    loadOwnedPets();
-    loadSavedPets();
+    // loadOwnedPets();
+    // loadSavedPets();
   }, []);
   //  }, [auth.token]);
 
-  const loadOwnedPets = async () => {
-    try {
-      getOwnedPets(auth.userId, auth.token).then((data) => {
-        setOwnedPets(data.owned);
-      });
-    } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
-    }
-  };
-
-  const loadSavedPets = async () => {
-    try {
-      getSavedPets(auth.userId, auth.token).then((data) => {
-        setSavedPets(data.saved);
-      });
-    } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
-    }
-  };
-
   const loadUser = () => {
-    getCurrentUser(auth.userId, auth.token).then((data) => {
-      setCurrentUserName(`${data.first_name} ${data.last_name}`);
-      setCurrentUserId(data.id);
-      setCurrentUserData(data);
-    });
+    // getCurrentUser(auth.userId, auth.token).then((data) => {
+    //   setCurrentUserName(`${data.first_name} ${data.last_name}`);
+    //   setCurrentUserId(data.id);
+    //   setCurrentUserData(data);
+    // });
   };
 
   const loadPets = async () => {
@@ -180,9 +150,7 @@ const Home = (props) => {
       console.log(pets);
       setPetList(pets);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
 
@@ -219,7 +187,7 @@ const Home = (props) => {
         <Switch>
           <Route exact path="/">
             <h2>
-              {greeting}, {currentUserName}!
+              {greeting}, {auth.fullName}!
             </h2>
             <ul>
               <li>
@@ -249,10 +217,10 @@ const Home = (props) => {
             </ul>
           </Route>
           <Route path="/my_pets">
-            <MyPetsList
-              currentUserId={currentUserId}
-              ownedPets={ownedPets}
-              savedPets={savedPets}
+            <MyPets
+            // currentUserId={currentUserId}
+            // ownedPets={ownedPets}
+            // savedPets={savedPets}
             />
           </Route>
 
@@ -282,7 +250,8 @@ const Home = (props) => {
 
           <Route path="/admin">
             {auth.admin && (
-              <AdminDashboard currentUserId={currentUserId} petList={petList} />
+              // <AdminDashboard currentUserId={auth.UserId} petList={petList} />
+              <AdminDashboard />
             )}
             {/* <Profile currentUser={authUser.uid}></Profile> */}
           </Route>

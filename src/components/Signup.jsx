@@ -1,12 +1,10 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUp, login } from '../lib/api';
 import { useAuth } from '../context/auth';
 
 export default function SignUp() {
   const auth = useAuth();
-  const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -17,7 +15,7 @@ export default function SignUp() {
     try {
       await signUp(data);
     } catch (error) {
-      setErrorMessage(
+      alert(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
       );
       return;
@@ -25,17 +23,17 @@ export default function SignUp() {
     try {
       const { token, user } = await login(data);
       await auth.saveUserId(user.id);
+      await auth.saveFullName(user.fullName);
       await auth.saveToken(token);
+      alert(
+        `Dear ${data.firstName}, it's great to have you with us! Your account has been created, and you will now be logged in.`
+      );
     } catch (error) {
-      setErrorMessage(
+      alert(
         `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
       );
     }
   };
-
-  useEffect(() => {
-    alert(errorMessage);
-  }, [errorMessage]);
 
   return (
     <>
@@ -47,7 +45,6 @@ export default function SignUp() {
               <input
                 className="form-control"
                 type="text"
-                // value=""
                 placeholder="First name"
                 {...register('firstName', {
                   required: true,
@@ -141,16 +138,16 @@ export default function SignUp() {
           </button>
 
           {/* <input className="btn btn-primary float-end" type="submit" /> */}
-          <div className="form-check">
+          {/* <div className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
               id="gridCheck"></input>
             <label className="form-check-label">
-              {/* for="gridCheck" */}
+              htmlFor="gridCheck"
               Agree to the user terms
             </label>
-          </div>
+          </div> */}
         </div>
       </form>
     </>

@@ -24,8 +24,7 @@ const AdminUserList = (props) => {
   return (
     <>
       <div>
-        {/* <div className="accordion" id="accordionExample"> */}
-        {allUsers}{' '}
+        <div className="list-group">{allUsers}</div>
       </div>
     </>
   );

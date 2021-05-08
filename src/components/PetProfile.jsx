@@ -60,7 +60,7 @@ const PetProfile = (props) => {
 
   const loadSavedStatus = async () => {
     try {
-      getSaveStatus(id, auth.token).then((data) => {
+      getSaveStatus(id, auth.userId, auth.token).then((data) => {
         console.log(data.savedStatus.length);
         if (data.savedStatus.length > 0) setIsOnUserSaveList(true);
         if (data.savedStatus.length === 0) setIsOnUserSaveList(false);
@@ -174,7 +174,7 @@ const PetProfile = (props) => {
                   Foster {pet.name}
                 </button>
               )}
-              {pet.status !== 'Available' && (
+              {pet.status !== 'Available' && pet.owner_id === auth.userId && (
                 <button
                   className="btn btn-primary float-end ms-2"
                   onClick={() => petAdoption(pet.id, 'Available')}>

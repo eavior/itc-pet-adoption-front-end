@@ -26,11 +26,8 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import Login from './components/Login';
-import AuthProvider, { useAuth } from './context/auth';
-import AdminDashboard from './components/AdminDashboard';
 
-import { getCurrentUser } from './lib/api';
+import AuthProvider, { useAuth } from './context/auth';
 
 function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -55,18 +52,8 @@ function PrivateRoute({ children, ...rest }) {
 
 const AppRouter = () => {
   let auth = useAuth();
-  // const [currentUserName, setCurrentUserName] = useState('');
-
-  // useEffect(() => {
-  //   if (auth.token) loadUser();
-  //   console.log('approuter');
-  // }, []);
-
-  // const loadUser = async () => {
-  //   await getCurrentUser(auth.userId, auth.token).then((data) => {
-  //     setCurrentUserName(`${data.first_name} ${data.last_name}`);
-  //   });
-  // };
+  console.log(auth.userId);
+  console.log(auth.fullName);
 
   if (!auth.isInitiallyLoaded) {
     return <div></div>;
@@ -79,21 +66,10 @@ const AppRouter = () => {
           {/* {auth.token && <Home />} */}
           {!auth.token && <HomeLoggedOut />}
         </Route>
-        {/* <Route path="/signup">
-          {auth.token && <Redirect to="/" />}
-          {!auth.token && <h1>Signup</h1>}
-        </Route>
-        <Route path="/login">
-          {auth.token && <Redirect to="/" />}
-          {!auth.token && <Login />}
-        </Route> */}
         <PrivateRoute path="/">
           {/* <Home userName={currentUserName} /> */}
           <Home />
         </PrivateRoute>
-        {/* <PrivateRoute path="/admin">
-          <Home />
-        </PrivateRoute> */}
       </Switch>
     </Router>
   );

@@ -15,12 +15,11 @@ body {
   background-size: cover;
   background-position: left top; */
 
-
-  background-color: #FFF; /*Default bg, similar to the background's base color*/
-   background-image: url("./petsbackground.png");
-   background-position: left bottom; /*Positioning*/
-   background-repeat: no-repeat; /*Prevent showing multiple background images*/
-   background-attachment: fixed;
+  background-color: #fff; /*Default bg, similar to the background's base color*/
+  background-image: url('./petsbackground.png');
+  background-position: left bottom; /*Positioning*/
+  background-repeat: no-repeat; /*Prevent showing multiple background images*/
+  background-attachment: fixed;
   /* display: grid;
   align-items: center;
   justify-content: center; */
