@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { BrowserRouter as Router, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import Login from './Login';
-import SignUp from './SignUp';
+import SignUpPage from './SignUpPage';
 
 const NavBar = () => {
   return (
@@ -141,7 +141,7 @@ const HomeLoggedOut = () => {
           onRequestClose={() => setShowModalSignUp(false)}
           ariaHideApp={false}>
           <h5>Create an account</h5>
-          <SignUp />
+          <SignUpPage />
         </Modal>
       </div>
     </>

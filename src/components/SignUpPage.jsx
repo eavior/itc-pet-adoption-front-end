@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { signUp, login } from '../lib/api';
 import { useAuth } from '../context/auth';
 
-export default function SignUp() {
+export default function SignUpPage() {
   const auth = useAuth();
   const {
     register,
