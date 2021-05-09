@@ -24,7 +24,7 @@ const AdminEditPet = (props) => {
       setPet(editedPet.pet);
       onCloseModal();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -34,7 +34,7 @@ const AdminEditPet = (props) => {
       onLoadPets();
       onCloseModal();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -47,7 +47,7 @@ const AdminEditPet = (props) => {
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -243,11 +243,16 @@ const AdminEditPet = (props) => {
                 {...register('bio', { required: false, min: 1 })}
               />
             </div>
+          </div>
+        </div>
+
+        <div className="col-12">
+          <div className="row">
             <div className="col-6 mb-4">
               <button
                 type="button"
                 onClick={handleSubmit(onDelete)}
-                className="btn btn-primary float-start ms-4">
+                className="btn btn-danger float-start ms-0">
                 {' '}
                 Delete this pet
               </button>

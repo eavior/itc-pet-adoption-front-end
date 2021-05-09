@@ -16,7 +16,7 @@ const PetProfile = (props) => {
   const auth = useAuth();
   const [pet, setPet] = useState({});
   const [isOnUserSaveList, setIsOnUserSaveList] = useState(false);
-  const [petPicURL, setPetPicURL] = useState(pet.picture_url);
+  const [petPicURL, setPetPicURL] = useState('');
 
   const isMounted = useRef(false);
 
@@ -34,6 +34,7 @@ const PetProfile = (props) => {
     try {
       getPetById(id, auth.token).then((data) => {
         setPet(data);
+        if (data.picture_url) setPetPicURL(data.picture_url);
         if (!data.picture_url) {
           if (data.type === 'dog') setPetPicURL('../dog.png');
           if (data.type === 'cat') setPetPicURL('../cat.png');
@@ -122,9 +123,9 @@ const PetProfile = (props) => {
           </div>
           <div className="card-footer">
             <p className="card-text">
-              <small className="text-muted float-start">
+              <div className="text-muted float-start">
                 Adoption status: {pet.status}
-              </small>
+              </div>
               {pet.status === 'Available' && (
                 <button
                   className="btn btn-primary float-end ms-2"

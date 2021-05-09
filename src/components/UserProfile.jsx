@@ -8,7 +8,7 @@ const UserProfile = (props) => {
   const { currentUserData, currentUserId } = props;
   const [email, setEmail] = useState('');
   const [user, setUser] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+
   const auth = useAuth();
 
   const {
@@ -19,20 +19,18 @@ const UserProfile = (props) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    if (data.email !== data.email2)
+      return alert("The email addresses don't match. Please correct.");
+    if (data.password !== data.password2)
+      return alert("The passwords don't match. Please correct.");
     try {
       const editedUser = await updateCurrentUser(data.id, data, auth.token);
       setUser(editedUser.user);
       alert(editedUser.result);
     } catch (error) {
-      setErrorMessage(
-        `${error.response.data.message} (status ${error.response.status} ${error.response.statusText})`
-      );
+      console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (errorMessage) alert(errorMessage);
-  }, [errorMessage]);
 
   useEffect(() => {
     getCurrentUser(auth.userId, auth.token).then((user) => {
@@ -48,10 +46,6 @@ const UserProfile = (props) => {
       fields.forEach((field) => setValue(field, user[field]));
       setEmail(user.email);
     });
-  }, []);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = 'white';
   }, []);
 
   return (
@@ -133,7 +127,7 @@ const UserProfile = (props) => {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('email', {
+                {...register('email2', {
                   required: false,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
@@ -159,7 +153,7 @@ const UserProfile = (props) => {
                 type="password"
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Password"
-                {...register('password', { required: false })}
+                {...register('password2', { required: false })}
               />
             </div>
           </div>

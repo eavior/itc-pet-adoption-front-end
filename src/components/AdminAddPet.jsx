@@ -234,23 +234,13 @@ const AddPet = (props) => {
                 {...register('bio', { required: false, min: 1 })}
               />
             </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="row">
             <div className="col-12 mb-4">
               <button type="submit" className="btn btn-primary float-end ms-4">
                 Save your changes
-              </button>
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                onClick={handleSubmit(onSubmit)}>
-                Save (2)
-              </button>
-              <button
-                onClick={(e) =>
-                  dispatchEvent(
-                    new Event('submit', { cancellable: true, bubbles: true })
-                  )
-                }>
-                Submit form
               </button>
             </div>
           </div>

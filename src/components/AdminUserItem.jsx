@@ -2,8 +2,9 @@ import React from 'react';
 import Modal from 'react-modal';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/auth';
-import { getOwnedPets } from '../lib/api';
-import MyOwnedPetsList from './MyOwnedPetsList';
+import { getOwnedPets, deleteUser, updateUserRole } from '../lib/api';
+// import MyOwnedPetsList from './MyOwnedPetsList';
+import PetListResult from './PetListResult';
 
 const AdminUserItem = (props) => {
   const auth = useAuth();
@@ -25,6 +26,26 @@ const AdminUserItem = (props) => {
       const pets = await getOwnedPets(item.id, auth.token);
       setOwnedPets(pets.owned);
     } catch (error) {}
+  };
+
+  const deleteUserAccount = async () => {
+    try {
+      const createdPet = await deleteUser(item.id, auth.token);
+      alert('This user account has been deleted');
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const makeAdmin = async () => {
+    try {
+      const update = 'admin';
+      const makeAdminResult = await updateUserRole(item.id, update, auth.token);
+      if (makeAdminResult.role === 'admin')
+        alert(`${item.first_name} ${item.last_name} has now admin rights`);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const modalStyle = {
@@ -79,15 +100,30 @@ const AdminUserItem = (props) => {
           onClick={() => setShowModal(false)}></button>
         <div>
           {item.first_name} {item.last_name} | Phone number: {item.phone_number}{' '}
-          | Email: {item.email}{' '}
+          | Email: <a href="mailto: ${item.email}">{item.email}</a>{' '}
         </div>
+        <br></br>
+        {/* <button
+          type="button"
+          className="btn btn-danger"
+          onClick={() => deleteUserAccount()}>
+          Delete this user account
+        </button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button
+          type="button"
+          className="btn btn-warning"
+          onClick={() => makeAdmin()}>
+          Assign admin rights
+        </button> */}
+        <br></br>
         <br></br>
 
         <div className="card">
           <div className="card-body">
             {ownedPets.length > 0 && (
-              <MyOwnedPetsList
-                ownedPets={ownedPets}
+              <PetListResult
+                petList={ownedPets}
                 onCloseModal={() => setShowModal(false)}
               />
             )}

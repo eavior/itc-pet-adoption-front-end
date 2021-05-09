@@ -12,6 +12,10 @@ export default function SignUp() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    if (data.email !== data.email2)
+      return alert("The email addresses don't match. Please correct.");
+    if (data.password !== data.password2)
+      return alert("The passwords don't match. Please correct.");
     try {
       await signUp(data);
     } catch (error) {
@@ -68,20 +72,6 @@ export default function SignUp() {
               />
             </div>
 
-            <div className="col-6 mb-4">
-              <label className="form-label">Phone number</label>
-              <input
-                className="form-control"
-                type="tel"
-                placeholder="Phone number"
-                {...register('phoneNumber', {
-                  required: true,
-                  minLength: 6,
-                  maxLength: 12,
-                })}
-              />
-            </div>
-
             <div className="col-md-6 mb-4">
               <label className="form-label">Email</label>
               <input
@@ -102,7 +92,7 @@ export default function SignUp() {
                 className="form-control"
                 type="email"
                 placeholder="Email"
-                {...register('emailCheck', {
+                {...register('email2', {
                   required: true,
                   min: 4,
                   pattern: /^\S+@\S+$/i,
@@ -126,9 +116,23 @@ export default function SignUp() {
                 className="form-control"
                 type="password"
                 placeholder="Password"
-                {...register('passwordCheck', { required: true })}
+                {...register('password2', { required: true })}
               />
             </div>
+          </div>
+
+          <div className="col-6 mb-4">
+            <label className="form-label">Phone number</label>
+            <input
+              className="form-control"
+              type="tel"
+              placeholder="Phone number"
+              {...register('phoneNumber', {
+                required: true,
+                minLength: 6,
+                maxLength: 12,
+              })}
+            />
           </div>
         </div>
 

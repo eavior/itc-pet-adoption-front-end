@@ -2,8 +2,9 @@ import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { getOwnedPets, getSavedPets } from '../lib/api';
 import { useAuth } from '../context/auth';
-import MyOwnedPetsList from './MyOwnedPetsList';
-import MySavedPetsList from './MySavedPetsList';
+// import MyOwnedPetsList from './MyOwnedPetsList';
+// import MySavedPetsList from './MySavedPetsList';
+import PetListResult from './PetListResult';
 
 const MyPets = () => {
   const auth = useAuth();
@@ -72,8 +73,8 @@ const MyPets = () => {
             data-parent="#accordionExample">
             <div className="card-body">
               {ownedPets.length > 0 && (
-                <MyOwnedPetsList
-                  ownedPets={ownedPets}
+                <PetListResult
+                  petList={ownedPets}
                   onRefresh={() => refresh()}
                 />
               )}
@@ -104,8 +105,8 @@ const MyPets = () => {
             data-parent="#accordionExample">
             <div className="card-body">
               {savedPets.length > 0 && (
-                <MySavedPetsList
-                  savedPets={savedPets}
+                <PetListResult
+                  petList={savedPets}
                   onRefresh={() => refresh()}
                 />
               )}
