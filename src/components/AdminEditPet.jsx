@@ -23,6 +23,7 @@ const AdminEditPet = (props) => {
       const editedPet = await updatePet(id, data, auth.token);
       setPet(editedPet.pet);
       onCloseModal();
+      onLoadPets();
     } catch (error) {
       alert(error);
     }

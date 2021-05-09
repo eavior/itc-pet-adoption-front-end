@@ -8,7 +8,7 @@ import FormData from 'form-data';
 const AddPet = (props) => {
   const { onLoadPets } = props;
   const auth = useAuth();
-  const [setPet] = useState(null);
+  const [pet, setPet] = useState(null);
   const [petPicURL, setPetPicURL] = useState('');
 
   const {
@@ -28,7 +28,7 @@ const AddPet = (props) => {
       setPetPicURL('');
       reset();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -41,7 +41,7 @@ const AddPet = (props) => {
       setPetPicURL(imageUrl.picture_url);
       setValue('picture_url', imageUrl.picture_url);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

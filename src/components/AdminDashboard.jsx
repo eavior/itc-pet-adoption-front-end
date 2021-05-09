@@ -26,7 +26,7 @@ const AdminDashboard = () => {
       const pets = await getAllPets(auth.token);
       setPetList(pets);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
       const users = await getUsers(auth.token);
       setUserList(users.user);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

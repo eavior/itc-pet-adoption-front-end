@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/auth';
 import { getOwnedPets, deleteUser, updateUserRole } from '../lib/api';
-// import MyOwnedPetsList from './MyOwnedPetsList';
 import PetListResult from './PetListResult';
 
 const AdminUserItem = (props) => {
