@@ -12,7 +12,6 @@ import UserProfile from './UserProfile';
 import AdminDashboard from './AdminDashboard';
 import SignOut from './SignOut';
 import MyPets from './MyPets';
-import { mockDB } from '../db/database';
 import PetProfile from './PetProfile';
 import Search from './Search';
 import { useAuth } from '../context/auth';
