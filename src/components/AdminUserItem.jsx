@@ -24,12 +24,14 @@ const AdminUserItem = (props) => {
     try {
       const pets = await getOwnedPets(item.id, auth.token);
       setOwnedPets(pets.owned);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deleteUserAccount = async () => {
     try {
-      const createdPet = await deleteUser(item.id, auth.token);
+      const deletedUser = await deleteUser(item.id, auth.token);
       alert('This user account has been deleted');
     } catch (error) {
       alert(error);
@@ -99,7 +101,7 @@ const AdminUserItem = (props) => {
           onClick={() => setShowModal(false)}></button>
         <div>
           {item.first_name} {item.last_name} | Phone number: {item.phone_number}{' '}
-          | Email: <a href="mailto: ${item.email}">{item.email}</a>{' '}
+          | Email: <a href={`mailto:${item.email}`}>{item.email}</a>{' '}
         </div>
         <br></br>
         {/* <button

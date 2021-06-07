@@ -11,13 +11,7 @@ const AddPet = (props) => {
   const [pet, setPet] = useState(null);
   const [petPicURL, setPetPicURL] = useState('');
 
-  const {
-    register,
-    setValue,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, setValue, reset, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
     try {

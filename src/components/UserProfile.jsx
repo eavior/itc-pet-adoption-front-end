@@ -5,18 +5,12 @@ import { useAuth } from '../context/auth';
 import { getCurrentUser, updateCurrentUser } from '../lib/api';
 
 const UserProfile = (props) => {
-  const { currentUserData, currentUserId } = props;
   const [email, setEmail] = useState('');
-  const [user, setUser] = useState('');
+  const [setUser] = useState('');
 
   const auth = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    // formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
   const onSubmit = async (data) => {
     if (data.email !== data.email2)

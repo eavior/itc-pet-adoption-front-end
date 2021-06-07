@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getPetById, updatePet, createImage, deletePet } from '../lib/api';
 import { useAuth } from '../context/auth';
@@ -11,12 +11,7 @@ const AdminEditPet = (props) => {
   const [petPicURL, setPetPicURL] = useState('');
   const auth = useAuth();
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, setValue, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
     try {

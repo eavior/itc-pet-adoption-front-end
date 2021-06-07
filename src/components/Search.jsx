@@ -8,9 +8,9 @@ const Search = (props) => {
   const auth = useAuth();
   const [searchByName, setSearchByName] = useState('');
   const [searchByType, setSearchByType] = useState('');
-  const [searchByStatus, setSearchByStatus] = useState('');
-  const [searchByHeight, setSearchByHeight] = useState('');
-  const [searchByWeight, setSearchByWeight] = useState('');
+  const [searchByStatus] = useState('');
+  const [searchByHeight] = useState('');
+  const [searchByWeight] = useState('');
   const [searchResult, setSearchResult] = useState('');
   const [searchPerformed, setSearchPerformed] = useState(false);
 
@@ -90,8 +90,8 @@ const Search = (props) => {
       {searchResult.length !== 0 && searchPerformed && (
         <PetListResult petList={searchResult} />
       )}
-      {searchResult.length == 0 && !searchPerformed && <div></div>}
-      {searchResult.length == 0 && searchPerformed && (
+      {searchResult.length === 0 && !searchPerformed && <div></div>}
+      {searchResult.length === 0 && searchPerformed && (
         <div>Sorry, no pets with the entered criteria were found.</div>
       )}
     </>
