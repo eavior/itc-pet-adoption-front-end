@@ -108,7 +108,7 @@ const PetProfile = (props) => {
                   <li>Breed: {pet.breed}</li>
                   <li>Color: {pet.color}</li>
                   <li>Height: {pet.height} cm</li>
-                  <li>Weight: {pet.weight} kg</li>
+                  <li>Weight: {pet.weight} gram</li>
                   <li>Hypoallergenic: {pet.hypoallergenic}</li>
                   <li>Dietary restrictions: {pet.diet}</li>
                 </ul>
@@ -122,7 +122,7 @@ const PetProfile = (props) => {
             </div>
           </div>
           <div className="card-footer">
-            <p className="card-text">
+            <div className="card-text">
               <div className="text-muted float-start">
                 Adoption status: {pet.status}
               </div>
@@ -161,7 +161,7 @@ const PetProfile = (props) => {
                   Remove {pet.name} from your 'saved pets' list
                 </button>
               )}
-            </p>
+            </div>
           </div>
         </div>
       </div>
